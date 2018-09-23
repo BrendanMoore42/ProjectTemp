@@ -35,7 +35,7 @@ def show_movie(path_to_txt):
     return movies
 
 #create random movie generator variable
-movies = show_movie('test_list.txt')
+movies = show_movie('imdbtop250.txt')
 random_movie = np.random.choice(movies)
 print(random_movie)
 
