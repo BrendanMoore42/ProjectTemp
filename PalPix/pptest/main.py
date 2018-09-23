@@ -14,7 +14,6 @@ If two people want to see the same film,
 Marked RED - do not watch alone
 If just one wants to see if,
 Marked GREEN - go ahead!
-
 """
 #import packages
 import flask
