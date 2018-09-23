@@ -40,9 +40,12 @@ print(random_movie)
 
 
 class UserAccount(object):
-    def __init__(self, user_id, my_movies):
+    def __init__(self, user_id):
         self.user_id = user_id
         self.my_movies = []
+
+    def add_friend(self):
+        print('Add a friend')
 
     def add_movie(self, title):
         print('Sup')
