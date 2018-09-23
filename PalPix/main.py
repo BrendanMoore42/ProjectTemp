@@ -17,25 +17,26 @@ Marked GREEN - go ahead!
 """
 #import packages
 import pickle
-import random
 import numpy as np
 
-
-#create movie list
-# movies = []
-# with open('test_list.txt', 'r') as f:
-#     lines = f.readlines()
-#     for line in lines:
-#         movies.append(line)
-
-def show_movie(movie_list):
+#get move list
+def show_movie(path_to_txt):
+    """
+    Retrieves up to date movies and returns list
+    :param path_to_txt: csv or text with movies
+    :return: list of movies
+    """
     movies = []
-    with open('test_list.txt', 'r') as f:
+    with open(f'{path_to_txt}', 'r') as f:
         lines = f.readlines()
         for line in lines:
             movies.append(line)
+    return movies
 
-
+#create random movie generator variable
+movies = show_movie('test_list.txt')
+random_movie = np.random.choice(movies)
+print(random_movie)
 
 
 class UserAccount(object):
