@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """
 Created: September 22, 2018
 Author: @BrendanMoore
@@ -16,6 +17,7 @@ Marked GREEN - go ahead!
 
 """
 #import packages
+import flask
 import pickle
 import numpy as np
 
