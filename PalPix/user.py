@@ -4,12 +4,13 @@ date: Nov 6, 108
 
 User Account API
 """
-import pandas as pd
+# import pandas as pd
+from movie_db import movies
 
-with open('imdbtop250.txt', 'r') as f:
-    lines = f.read().splitlines()
+#import movies
+movies = movies()
 
-print(lines)
+print(movies)
 
 class User():
 
