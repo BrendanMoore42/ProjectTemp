@@ -20,8 +20,10 @@ matplotlib.rcParams['interactive'] == True
 import matplotlib.pyplot as plt
 
 # image_test = plt.imshow('test.jpg')
-image_test = np.asarray('./test.jpg')
-plt.show(image_test)
+image_test = Image.open('test.jpg')
+image_test.load()
+# plt.imshow(image_test)
+# plt.show()
 
 def main(image):
     """
@@ -33,12 +35,18 @@ def main(image):
     #grab image
     #image = requests.get(image)
 
-    #plt.imshow(image)
-    pass
+
+    image = np.asarray(image, dtype='int32')
+
+    print(image[0])
 
 
+    image = image[0]
+    plt.show(image[0])
 
-
+    # plt.imshow(image)
+    # print(type(image))
+    # plt.show()
 
 
 if __name__ == '__main__':
