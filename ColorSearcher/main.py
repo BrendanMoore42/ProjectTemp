@@ -37,8 +37,6 @@ def main(image):
     #grab image
     #image = requests.get(image)
 
-
-
     image = np.asarray(image, dtype='int32')
 
     print(image[0])
