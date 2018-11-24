@@ -73,13 +73,12 @@ class Falco(Player):
 
 def start_game():
 
-    print('='*25)
-    print('>> Welcome to DiaDungeon!\n')
+    print('='*25, '\n')
     print('>> Player beware, for the path is dangerous to go alone...')
     print('>> The Warrior\'s sword is strong but his shield is weak...')
     print('>> The Princess\'s magical armour protects her from most attacks...')
-    print('>> The Wizard is powerful but at what cost...?')
-    player = input('>> Choose a class >> ')
+    print('>> The Wizard is powerful but at what cost?...\n')
+    player = input('>> Who will you choose?... >> ')
 
     if player == 'quit':
         print('>> Exiting...')
@@ -92,23 +91,33 @@ def start_game():
 
 def help_menu():
 
-    print('='*25, '\n\n')
-    print('>> Help Menu >>')
+    print('\n', '='*25)
+    print('******* Help Menu *******')
     print('>> Press "b" to navigate back to title')
-    pass
+
+    menu = textwrap.dedent(f'''\n
+                            > Play: Press 'p' or 'play' to start game
+                            > Quit: 'q' or 'quit' to exit game\n
+                            ''')
+    print('=' * 25, '\n\n')
+
+
 
 def title_screen():
-    option = ''
-    def select_option():
-        option = input('>> Enter Command or "h" for help anytime >> ')
-        if option.lower() == 'play':
-            start_game() #launches game instance
-        elif option.lower() == 'help':
+
+    print('>> Welcome to DiaDungeon!')
+    option = input('>> Enter Command or "h" for help >> ')
+
+    def select_option(arg):
+        if arg.lower() in ['p', 'play']:
+            # launch game
+            start_game()
+        elif arg.lower() in ['h', 'help']:
             help_menu()
-        elif option.lower() == 'quit':
+        elif arg.lower() in ['q', 'quit']:
             sys.exit()
 
-    select_option()
+    select_option(option)
 
     while option.lower() not in ['play', 'help', 'quit']:
         print('Please enter a valid command.\n')
