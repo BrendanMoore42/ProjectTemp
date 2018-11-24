@@ -15,17 +15,26 @@ from PIL import Image
 
 #plotting imports
 import matplotlib
+import matplotlib.image as mpimg
 matplotlib.use("TkAgg")
 matplotlib.rcParams['interactive'] == True
 import matplotlib.pyplot as plt
 
-# image_test = plt.imshow('test.jpg')
-image_test = Image.open('test.jpg')
-image_test.load()
-# plt.imshow(image_test)
-# plt.show()
+img = Image.open('test.jpg')
 
-# make sure you include a thing that returns the text capitalized properly
+rgb_im = img.convert('RGB')
+print(rgb_im)
+plt.imshow(rgb_im)
+plt.show()
+
+
+
+# # image_test = plt.imshow('test.jpg')
+# image_test = Image.open('test.jpg')
+# image_test.load()
+# # plt.imshow(image_test)
+# # plt.show()
+
 
 def main(image):
     """
@@ -37,19 +46,20 @@ def main(image):
     #grab image
     #image = requests.get(image)
 
-    image = np.asarray(image, dtype='int32')
+    #image = np.asarray(image, dtype='int32')
 
-    print(image[0])
-
-
-    image = image[0]
-    plt.show(image[0])
+    # print(image[500])
+    # for i in image:
+    #     print(i, '\n\n')
+    #
+    # plt.imshow(image)
+    # plt.show()
 
     # plt.imshow(image)
     # print(type(image))
     # plt.show()
-
+    pass
 
 if __name__ == '__main__':
     # main(sys.argv)
-    main(image_test)
+    main(img)
