@@ -25,6 +25,8 @@ image_test.load()
 # plt.imshow(image_test)
 # plt.show()
 
+# make sure you include a thing that returns the text capitalized properly
+
 def main(image):
     """
 
@@ -34,6 +36,7 @@ def main(image):
 
     #grab image
     #image = requests.get(image)
+
 
 
     image = np.asarray(image, dtype='int32')
