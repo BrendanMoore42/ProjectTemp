@@ -1,7 +1,6 @@
 import glob
 import pickle
-import numpy
-from music21 import converter, instrument, note, chord
+import mido
 
 
 def get_notes():
@@ -32,9 +31,8 @@ def get_notes():
 
     return notes
 
-notes = get_notes()
-print(notes)
+get_notes()
 
-with open('C:/Users/B/Desktop/midis/data/notes.pkl', 'rb') as f:
-    file = pickle.load(f)
-print(file)
+# with open('C:/Users/B/Desktop/midis/data/notes.pkl', 'rb') as f:
+#     file = pickle.load(f)
+# print(file)
