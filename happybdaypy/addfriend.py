@@ -1,20 +1,39 @@
 """
-Adds a friend to your list
+Adds a friend to your list without gui.
 
-Use: Run in bash with extra arguments being your friends
-name and day/month to remember.
+Arguments are name and day/month.
 
-Example: Adding Dave, born on July 12th
-python addfriend.py Dave 1207
+Run in bash:
+$ python addfriend.py Zapp 3006
+
+Now on June 30th of every year a text will notify you
+with your reminder.
 """
 import sys
-from friends import friends
+import json
 
-def main(name, date):
-    date = date[:1] + '/' + date[2:]
+def main(args):
+    """
+    args[1] = Name
+    args[2] = Date
+    Date format must be Day/Month and just numbers.
+    """
+    # define variables
+    name = args[1].capitalize()
+    date = args[2][:2] + '/' + args[2][2:]
+
+    # import friend data
+    with open('friends.json') as f:
+        friends = json.load(f)
+
+    # search through friends
     if name in friends:
-        print(f'{name} already in database')
-    friends.update({name:date})
+        print(f'{name} exists: Date {date}')
+    else:
+        friends.update({name: date})
+        with open('friends.json', 'w') as f:
+            json.dump(friends, f)
+        print(f'{name} added')
 
 if __name__ == '__main__':
-    main(sys.arg)
+    main(sys.argv)

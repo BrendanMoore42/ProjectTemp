@@ -3,4 +3,5 @@
 *.csv
 /env
 /happybdaypy/*.txt
+/happybdaypy/friends.json
 /happybdaypy/credentials.py
