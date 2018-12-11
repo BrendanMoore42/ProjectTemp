@@ -2,3 +2,5 @@
 *.sh
 *.csv
 /env
+/happybdaypy/*.txt
+/happybdaypy/credentials.py
