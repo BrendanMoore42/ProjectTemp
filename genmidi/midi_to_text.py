@@ -8,8 +8,23 @@ import sys
 from mido import MidiFile
 # from textgenrnn import textgenrnn
 
-mid = MidiFile("C:/Users/B/Desktop/midis/Nintendo/Misc/airfortress.mid")
+mid = MidiFile("C:/Users/B/Desktop/midis/Nintendo/Pokemon/PkmRB-12.mid")
 temp_midi = []
+
+def grab_num_values(midi_string):
+    '''
+    Puts the numerical value to a dictionary.
+    :param midi_string:
+    :return:
+    '''
+
+    value_dict = { 'time': 0,
+                   ''
+
+    }
+
+
+
 
 for i, track in enumerate(mid.tracks):
 
@@ -17,6 +32,12 @@ for i, track in enumerate(mid.tracks):
 
     # file = open('midi_txt_test1.txt', 'w+')
     for msg in track:
+
+
+
+
+
+
 
         # temp_midi.append(str(msg))
         print('\t\t', str(msg))
@@ -30,10 +51,6 @@ for i, track in enumerate(mid.tracks):
 # textgen.generate(string)
 
 
-
-#
-#
-#
 # import py_midicsv as mc
 # # Load midi file
 # midi = mc.midi_to_csv("C:/Users/B/Desktop/midis/Nintendo/DKR/DKRDrago.mid")
