@@ -8,7 +8,7 @@ import sys
 from mido import MidiFile
 # from textgenrnn import textgenrnn
 
-mid = MidiFile("C:/Users/B/Desktop/midis/Nintendo/Pokemon/PkmRB-12.mid")
+mid = MidiFile("C:/Users/B/Desktop/midis/Nintendo/DKR/Hauntedwoods.mid")
 temp_midi = []
 
 def grab_num_values(midi_string):
@@ -17,39 +17,29 @@ def grab_num_values(midi_string):
     :param midi_string:
     :return:
     '''
+    pass
 
-    value_dict = { 'time': 0,
-                   ''
+for track in mid.tracks:
 
-    }
-
-
-
-
-for i, track in enumerate(mid.tracks):
-
-    print(f'¨{i}: {track}')
+    print(track)
 
     # file = open('midi_txt_test1.txt', 'w+')
     for msg in track:
 
-
-
-
-
-
-
         # temp_midi.append(str(msg))
-        print('\t\t', str(msg))
+        print(msg)
 
-# with open('midi_txt_test1.txt', 'w') as f:
-#     f.writelines(temp_midi)
+print(mid.length)
 
-# textgen = textgenrnn()
+
+# # with open('midi_txt_test1.txt', 'w') as f:
+# #     f.writelines(temp_midi)
 #
-# # textgen.train_from_file
-# textgen.generate(string)
-
+# # textgen = textgenrnn()
+# #
+# # # textgen.train_from_file
+# # textgen.generate(string)
+# print('\n\n\n\n', track)
 
 # import py_midicsv as mc
 # # Load midi file
