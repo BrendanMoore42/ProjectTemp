@@ -1,3 +1,3 @@
 DiaDungeons
 
-Dungeon crawler RPG for Diabetics
+Dungeon crawler RPG for use with Continuous Glucose Monitors.
