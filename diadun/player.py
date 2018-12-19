@@ -70,59 +70,47 @@ class Falco(Player):
     def __str__(self):
         return super().__str__()
 
+
 # environment variables
 menu_options = ['b', 'back', 'q', 'quit',
                 'p', 'play', 'h', 'help']
 
-characters = ['Bird', 'Falco', 'Warrior', 'Princess', 'Wizard']
+characters = {'1': Warrior(),
+              '2': Princess(),
+              '3': Wizard(),
+              '4': Falco()}
 
 # functions block
-def start_game():
+def choose_character():
 
-    print('='*25, '\n')
-    print('>> Player beware, for the path is dangerous...')
-    print('>> The Warrior\'s sword is a strong and sturdy weapon...')
-    print('>> The Princess\'s magical armour protects her from most attacks...')
-    print('>> The Wizard is powerful but at what cost?...\n')
+    print('\n', '='*25, '\n')
+    print('Player beware, for the path is dangerous...')
+    print('1. The Warrior\'s sword is a strong and sturdy weapon...')
+    print('2. The Princess\'s magical armour protects her from most attacks...')
+    print('3. The Wizard is powerful but at what cost?...\n')
 
-    player = input('>> Who will you choose?... >> ')
+    action = input('>> Who will you choose? ')
 
-    '''
-    thinking here that someway to auto assign player classes
-    without it getting to complex. might have to do each class
-    gets its own if line like it already does.
-    '''
-    if player in characters:
-        pass
+    if action in characters.keys():
 
-    if player in ['q', 'quit']:
-        print('>> Exiting...')
-        sys.exit()
-    elif player in ['bird', 'falco']:
-        player = Falco()
-        print(Falco)
-    elif player in ['warrior', 'w']:
-        player = Warrior()
-        print(Warrior)
-    elif player in ['princess', 'p']:
-        player = Princess()
-        print(Princess)
-    elif player in ['wizard', 'w']:
-        player = Wizard()
-        print(Wizard)
+        player = characters[action]
+        print(f"You selected: {player.name}")
 
-    # get back to where we need to be
-    title_screen()
+def start_game(player):
+
+    print(player.name)
+
+
 
 
 def help_menu():
     print('\n', '='*25)
-    print('******* Help Menu *******')
-    print('>> Press "b" to navigate back to title')
+    print('******* Help Menu *******\n')
+    print("Press 'b' to navigate back to title")
 
     menu = textwrap.dedent(f'''\n
-                            > Play: Press 'p' or 'play' to start game
-                            > Quit: 'q' or 'quit' to exit game\n
+                            Play: Press 'p' or 'play' to start game
+                            Quit: 'q' or 'quit' to exit game\n
                             ''')
     print(menu)
     print('=' * 25, '\n')
@@ -131,7 +119,7 @@ def help_menu():
 def menu_nav(option):
     if option.lower() in ['p', 'play']:
         # launch game
-        start_game()
+        choose_character()
     elif option.lower() in ['h', 'help']:
         # launch help
         help_menu()
@@ -142,7 +130,11 @@ def menu_nav(option):
 
 def title_screen():
 
-    print('>> Welcome to DiaDungeon!')
+    print("Welcome to DiaDungeon!\n\n"
+          "Play: Press 'p' to start game\n"
+          "Restart: Press 'r' to restart game\n"
+          "Quit: Press 'q' to exit game\n")
+
     option = input('>> ')
 
     if option.lower() not in menu_options:
