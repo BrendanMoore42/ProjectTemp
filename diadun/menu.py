@@ -1,3 +1,4 @@
+#!/usr/bin/env
 """
 author: @BrendanMoore42
 date: November 22, 2018
@@ -29,17 +30,14 @@ characters = {'1': Warrior(),
               '4': Falco()
               }
 
-enemies = [Snail(), Ghoul(), Hagraven()]
-
 environments = {'Regular': ['Perilous Path', 'Haunted Woods', 'Creepy Cave', 'Mighty Mountain'],
-                "Boss": ["Dragon's Den", "Denny's Diner", "Crumbling Castle"]
-                }
+                "Boss": ["Dragon's Den", "Denny's Diner", "Crumbling Castle"]}
 
 status_buffs = {'Buffed': 2,
-               'Strong': 1,
-               'Weakened': 0.75,
-               'Injured': 0.25,
-               'Ghost': 1}
+                'Strong': 1,
+                'Weakened': 0.75,
+                'Injured': 0.25,
+                'Ghost': 1}
 
 # functions block
 def choose_character():
@@ -76,56 +74,119 @@ def start_game(player, environments):
 
 def run_encounter(player, location):
 
+    enemies = [Snail(level=player.level), Ghoul(level=player.level), Hagraven(level=player.level)]
+
     def boss_encounter():
         pass
 
     def roll_attack():
         return input("\nEnter Blood Sugar: ")
 
-    def enemy_attack():
+    def enemy_attack(level, buff=False):
+        """
+        if buff, attack was missed, so monster gets 1.25x boost
+        :param level: player level dictates strength of enemy -> attack
+        :return:
+        """
         pass
 
-    def enemy_status():
-        print(f'Enemy: {enemy.name}\n'
+    def enemy_status(player_attack=1, critical=False):
+        """
+        Updates enemies stats on attack
+        :param player_attack:
+        :param critical: If True, enemy automatically defeated
+        :return:
+        """
+
+        if critical:
+            print('Critical attack!! Monster defeated!\n')
+            enemy.critical_defeat()
+            player.update_level(critical=True)
+            run_encounter(player, location)
+
+        print(f'\nEnemy: {enemy.name}\n'
               f'Health: {enemy.defense}\n')
 
-    def player_turn(choice):
+        print(f"The {player.name} used {player.weapon} with attack power of {player_attack}")
+
+        enemy.update_health(player_attack=player_attack)
+
+        print(f'\nEnemy: {enemy.name}\n'
+              f'Health: {enemy.defense}\n')
+
+    def player_turn(action):
 
         buff = status_buffs[player.status]
         roll = float(roll_attack())
 
         # attack
-        if choice == '1':
-            attack_power = player.attack + player.level + buff
+        if action == '1':
+            attack_power = round((player.attack + player.level + buff)/roll, 2)
 
             print(f"Status buff: x {buff}\n"
                   f"Attack Power: {attack_power}\n"
                   f"Roll Attack: {roll}\n")
 
-            if 0 < roll < 2:
-                print('\n','='*25)
+            if 0 < roll <= 2.0:
+                print('\n', '='*25)
                 print('\nBlood Sugar Critically Low SEEK IMMEDIATE CARE\n')
                 print('Exiting game.')
                 sys.exit()
-            if 2 < roll < 3:
-                print('\nWeak attack...')
-                enemy_status()
-
+            if 2.1 <= roll <= 3.0:
+                print('\nVery Weak attack!')
+                enemy_status(attack_power)
+            if 3.1 <= roll <= 4.0:
+                print('\nWeak attack!')
+                enemy_status(attack_power)
+            if 4.1 <= roll <= 5.0:
+                print('\nStrong attack!')
+                enemy_status(attack_power)
+            if roll == 5.5:
+                print('\nCritical Success!!')
+                enemy_status(critical=True)
+            if 5.1 <= roll <= 6.0:
+                print('\nVery Strong attack!')
+                enemy_status(attack_power)
+            if 6.1 <= roll <= 7.0:
+                print('\nStrong attack!')
+                enemy_status(attack_power)
+            if 7.1 <= roll <= 9.0:
+                print('\nWeak attack!')
+                enemy_status(attack_power)
+            if 9.1 <= roll <= 12.0:
+                print('\nExtremely Weak attack!')
+                enemy_status(attack_power)
+            if roll >= 12.1:
+                print('\nAttack Missed! Monster buffed!')
+                enemy_attack(player.level)
 
 
         # defend
-        if choice == 2:
+        if action == 2:
             defense_power = player.defense * player.level * buff
             pass
 
+        if enemy.status:
+            action = input("1. Attack\n"
+                           "2. Defend\n"
+                           "3. Check Stats\n"
+                           "4. Check Monster\n"
+                           "5. Title screen\n"
+                           ">> ")
+            player_turn(action)
+
+
+        if not enemy.status:
+            # enemy is defeated, update level and run next encounter
+            player.update_level()
 
     if player.level % 5 != 0:
         enemy = random.choice(enemies)
-        choice = input(f"\nOh no! a {enemy.name} blocks your path!\n"
+        init_action = input(f"\nOh no! a {enemy.name} blocks your path!\n"
                         "1. Attack\n"
                         "2. Defend\n"
                         ">> ")
-        player_turn(choice)
+        player_turn(init_action)
 
 
     if player.level % 5 == 0:

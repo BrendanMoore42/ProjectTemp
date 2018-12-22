@@ -15,11 +15,9 @@ import textwrap
 # enemy meta classs
 class Enemy():
 
-    status = ['Buffed', 'Strong', 'Weakened', 'Injured', 'Defeated']
-
-    def __init__(self, name, hp=50, attack=50, defense=50, weapon='Hands', status=status[1]):
+    def __init__(self, level, name, attack=5, defense=5, weapon='Scary Face', status=True):
+        self.level = level
         self.name = name
-        self.hp = hp
         self.attack = attack
         self.defense = defense
         self.weapon = weapon
@@ -28,42 +26,67 @@ class Enemy():
     def __str__(self):
         return textwrap.dedent(f'''\n
                                 Name: {self.name}
-                                HP: {self.hp}
                                 Attack: {self.attack}
-                                Defense: {self.defense}
-                                Weapon: {self.weapon}
-                                Status: {self.status}\n
+                                Defense: {self.defense}\n
                                 ''')
+
+
+    def update_health(self, player_attack):
+        self.defense -= player_attack
+        if self.defense <= 0:
+            self.defense = 0
+
+    def critical_defeat(self):
+        self.status = False
+
 
 # enemy classes
 class Snail(Enemy):
 
-    def __init__(self, name='Scary Snail', weapon="Slime Squall", attack=5, defense=15):
-        super().__init__(name=name, weapon=weapon, attack=attack, defense=defense)
+    def __init__(self, level, name='Scary Snail', weapon="Slime Squall", attack=5, defense=15, status=True):
+        self.level = level
+        self.name = name
+        self.attack = attack * level
+        self.defense = defense * level
+        self.weapon = weapon
+        self.status = status
+        # super().__init__(player_level=player_level, name=name, weapon=weapon, attack=attack*player_level, defense=defense*player_level)
 
-    def __str__(self):
-        return super().__str__()
+    # def __str__(self):
+    #     return super().__str__()
 
 class Ghoul(Enemy):
 
-    def __init__(self, name='Gaseous Ghoul', weapon="Stink Attack", attack=15, defense=25):
-        super().__init__(name=name, weapon=weapon, attack=attack, defense=defense)
-
-    def __str__(self):
-        return super().__str__()
+    def __init__(self, level, name='Gaseous Ghoul', weapon="Stink Attack", attack=15, defense=25, status=True):
+        self.level = level
+        self.name = name
+        self.attack = attack * level
+        self.defense = defense * level
+        self.weapon = weapon
+        self.status = status
+    #     super().__init__(player_level=player_level, name=name, weapon=weapon, attack=attack*player_level, defense=defense*player_level)
+    #
+    # def __str__(self):
+    #     return super().__str__()
 
 class Hagraven(Enemy):
 
-    def __init__(self, name='Hairy Hagraven', weapon="Hairball Hurl", attack=25, defense=35):
-        super().__init__(name=name, weapon=weapon, attack=attack, defense=defense)
-
-    def __str__(self):
-        return super().__str__()
+    def __init__(self, level, name='Hairy Hagraven', weapon="Hairball Hurl", attack=25, defense=35, status=True):
+        self.level = level
+        self.name = name
+        self.attack = attack * level
+        self.defense = defense * level
+        self.weapon = weapon
+        self.status = status
+    #     super().__init__(player_level=player_level, name=name, weapon=weapon, attack=attack*player_level, defense=defense*player_level)
+    #
+    # def __str__(self):
+    #     return super().__str__()
 
 class Dragon(Enemy):
 
-    def __init__(self, name='Dangerous Dragon', weapon="Fire Breath", attack=50, defense=100):
-        super().__init__(name=name, weapon=weapon, attack=attack, defense=defense)
+    def __init__(self, name='Dangerous Dragon', weapon="Fire Breath", attack=50, defense=100, status=True):
+        super().__init__(name=name, weapon=weapon, attack=attack*player_level, defense=defense*player_level)
 
     def __str__(self):
         return super().__str__()

@@ -14,7 +14,7 @@ import textwrap
 # player meta class
 class Player():
 
-    def __init__(self, name, level= 1, hp=100, attack=50, defense=50, weapon='Hands', status='Strong'):
+    def __init__(self, name, level=1, hp=100, attack=50, defense=50, weapon='Hands', status='Strong'):
         self.name = name
         self.level = level
         self.hp = hp
@@ -32,6 +32,17 @@ class Player():
                                 Weapon: {self.weapon}
                                 Status: {self.status}\n
                                 ''')
+
+    def update_level(self, critical=False):
+        """
+        If monster defeated, level up. If critical strike, level up 5 levels.
+        :return:
+        """
+        if critical:
+            self.level += 5
+        else:
+            self.level += 1
+
 
 # character classes
 class Warrior(Player):
