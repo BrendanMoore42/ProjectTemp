@@ -2,21 +2,23 @@
 author: @BrendanMoore42
 date: November 22, 2018
 
-Player classes:
+Enemy classes:
 
-Warrior, Princess, Wizard, Falco Lombardi
+Scary Snail, Gaseous Ghoul, Hairy Hagraven, Dangerous Dragon
+
 """
 
 import os, cmd, sys
 import time, random
 import textwrap
 
-# player meta class
-class Player():
+# enemy meta classs
+class Enemy():
 
-    def __init__(self, name, level= 1, hp=100, attack=50, defense=50, weapon='Hands', status='Strong'):
+    status = ['Buffed', 'Strong', 'Weakened', 'Injured', 'Defeated']
+
+    def __init__(self, name, hp=50, attack=50, defense=50, weapon='Hands', status=status[1]):
         self.name = name
-        self.level = level
         self.hp = hp
         self.attack = attack
         self.defense = defense
@@ -33,34 +35,34 @@ class Player():
                                 Status: {self.status}\n
                                 ''')
 
-# character classes
-class Warrior(Player):
+# enemy classes
+class Snail(Enemy):
 
-    def __init__(self, name='Warrior', weapon="Sword", attack=75):
-        super().__init__(name=name, weapon=weapon, attack=attack)
-
-    def __str__(self):
-        return super().__str__()
-
-class Princess(Player):
-
-    def __init__(self, name='Princess', weapon="Bow", defense=75):
-        super().__init__(name=name, weapon=weapon, defense=defense)
-
-    def __str__(self):
-        return super().__str__()
-
-class Wizard(Player):
-
-    def __init__(self, name='Wizard', weapon="Magic", attack=75, defense=25):
+    def __init__(self, name='Scary Snail', weapon="Slime Squall", attack=5, defense=15):
         super().__init__(name=name, weapon=weapon, attack=attack, defense=defense)
 
     def __str__(self):
         return super().__str__()
 
-class Falco(Player):
+class Ghoul(Enemy):
 
-    def __init__(self, name='Falco Lombardi', weapon="Pillar Combos", attack=1000, defense=1000):
+    def __init__(self, name='Gaseous Ghoul', weapon="Stink Attack", attack=15, defense=25):
+        super().__init__(name=name, weapon=weapon, attack=attack, defense=defense)
+
+    def __str__(self):
+        return super().__str__()
+
+class Hagraven(Enemy):
+
+    def __init__(self, name='Hairy Hagraven', weapon="Hairball Hurl", attack=25, defense=35):
+        super().__init__(name=name, weapon=weapon, attack=attack, defense=defense)
+
+    def __str__(self):
+        return super().__str__()
+
+class Dragon(Enemy):
+
+    def __init__(self, name='Dangerous Dragon', weapon="Fire Breath", attack=50, defense=100):
         super().__init__(name=name, weapon=weapon, attack=attack, defense=defense)
 
     def __str__(self):
