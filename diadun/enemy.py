@@ -15,7 +15,7 @@ import textwrap
 # enemy meta classs
 class Enemy():
 
-    def __init__(self, level, name, attack=5, defense=5, weapon='Scary Face', status=True):
+    def __init__(self, level, name, attack, defense, weapon, status=True):
         self.level = level
         self.name = name
         self.attack = attack

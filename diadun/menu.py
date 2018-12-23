@@ -33,7 +33,7 @@ characters = {'1': Warrior(),
 environments = {'Regular': ['Perilous Path', 'Haunted Woods', 'Creepy Cave', 'Mighty Mountain'],
                 "Boss": ["Dragon's Den", "Denny's Diner", "Crumbling Castle"]}
 
-status_buffs = {'Buffed': 2,
+status_buffs = {'Buffed': 1.5,
                 'Strong': 1,
                 'Weakened': 0.75,
                 'Injured': 0.25,
@@ -82,7 +82,7 @@ def run_encounter(player, location):
     def roll_attack():
         return input("\nEnter Blood Sugar: ")
 
-    def enemy_attack(level, buff=False):
+    def enemy_attack(roll, level, buff=False):
         """
         if buff, attack was missed, so monster gets 1.25x boost
         :param level: player level dictates strength of enemy -> attack
@@ -90,17 +90,14 @@ def run_encounter(player, location):
         """
         pass
 
-    def enemy_status(player_attack=1, critical=False, buff=False):
+    def enemy_status(player_attack=None, critical=False, buff=False):
         """
         Updates enemies stats on attack
         :param player_attack:
         :param critical: If True, enemy automatically defeated
         :return:
         """
-        print(f'\nEnemy: {enemy.name}\n'
-              f'Health: {enemy.defense}\n')
-
-        print(f"The {player.name} used {player.weapon} with attack power of {player_attack}")
+        print(f"The {player.name} used {player.weapon} with attack power of {player_attack}\n")
 
         if critical:
             print('Critical attack!! Monster defeated!\n')
@@ -114,48 +111,57 @@ def run_encounter(player, location):
 
         enemy.update_health(player_attack=player_attack)
 
-        print(f'\nEnemy: {enemy.name}\n'
-              f'Health: {enemy.defense}\n')
-
     def player_turn(action):
 
-        buff = status_buffs[player.status]
-        # attack
-        if action == '1':
-            roll = float(roll_attack())
-            attack_power = round((player.attack + player.level + buff)/roll, 2)
-
-            print(f"Status buff: x {buff}\n"
-                  f"Attack Power: {attack_power}\n"
-                  f"Roll Attack: {roll}\n")
-
+        def attack_power(roll, buff):
             if 0 < roll <= 2.0:
                 print('\n', '='*25)
                 print('\nBlood Sugar Critically Low SEEK IMMEDIATE CARE\n')
                 print('Exiting game.')
                 sys.exit()
             if 2.1 <= roll <= 3.0:
+                power = round((player.attack / 8 + roll * buff), 2)
                 print('\nVery Weak attack!')
             if 3.1 <= roll <= 4.0:
+                power = round((player.attack / 6 + (roll * 1.25) * buff), 2)
                 print('\nWeak attack!')
             if 4.1 <= roll <= 5.0:
+                power = round((player.attack / 4 * roll * buff), 2)
                 print('\nStrong attack!')
             if roll == 5.5:
                 print('\nCritical Success!!')
                 enemy_status(critical=True)
             if 5.1 <= roll <= 6.0:
+                power = round((player.attack / 2 * roll * buff), 2)
                 print('\nVery Strong attack!')
             if 6.1 <= roll <= 7.0:
+                power = round((player.attack / 4 * roll * buff), 2)
                 print('\nStrong attack!')
             if 7.1 <= roll <= 9.0:
+                power = round((player.attack / 6 + (roll * 1.25) * buff), 2)
                 print('\nWeak attack!')
             if 9.1 <= roll <= 12.0:
+                power = round((player.attack / 8 + roll * buff), 2)
                 print('\nExtremely Weak attack!')
             if roll >= 12.1:
                 print('\nAttack Missed!')
                 enemy_status(buff=True)
 
-            enemy_status(attack_power)
+            enemy_status(power)
+
+        buff = status_buffs[player.status]
+
+
+        # attack
+        if action == '1':
+            roll = float(roll_attack())
+
+            #attack_power = round((player.attack + player.level * buff)/roll, 2)
+
+            attack_power(roll, buff)
+
+            print(f"Status buff: x {buff}\n"
+                  f"Roll Attack: {roll}\n")
 
         # defend
         if action == '2':

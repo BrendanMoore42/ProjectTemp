@@ -14,10 +14,9 @@ import textwrap
 # player meta class
 class Player():
 
-    def __init__(self, name, level=1, hp=100, attack=50, defense=50, weapon='Hands', status='Strong'):
+    def __init__(self, name, weapon, level=1, status='Strong', attack=50, defense=50):
         self.name = name
         self.level = level
-        self.hp = hp
         self.attack = attack
         self.defense = defense
         self.weapon = weapon
@@ -26,7 +25,6 @@ class Player():
     def __str__(self):
         return textwrap.dedent(f'''\n
                                 Name: {self.name}
-                                HP: {self.hp}
                                 Attack: {self.attack}
                                 Defense: {self.defense}
                                 Weapon: {self.weapon}
@@ -41,9 +39,13 @@ class Player():
         """
         if critical:
             self.level += 5
+            self.attack * 3.75
+            self.defense * 3.75
             print(f'\nNice Moves! You moved 5 levels up to level {self.level}!')
         else:
             self.level += 1
+            self.attack * 1.75
+            self.defense * 1.75
             print(f'\nLevel Up! You are now level {self.level}')
 
 
