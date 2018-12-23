@@ -33,11 +33,20 @@ class Enemy():
 
     def update_health(self, player_attack):
         self.defense -= player_attack
+        self.defense = round(self.defense)
         if self.defense <= 0:
+            print(f'\n{self.name} defeated!')
             self.defense = 0
+            self.status = False
 
     def critical_defeat(self):
         self.status = False
+
+    def buff_stat(self, category):
+        if category == 'attack':
+            self.attack = round(self.attack * 1.5)
+        if category == 'defense':
+            self.defense = round(self.defense * 1.5)
 
 
 # enemy classes

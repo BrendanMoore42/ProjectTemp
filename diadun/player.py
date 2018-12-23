@@ -30,7 +30,8 @@ class Player():
                                 Attack: {self.attack}
                                 Defense: {self.defense}
                                 Weapon: {self.weapon}
-                                Status: {self.status}\n
+                                Status: {self.status}
+                                Level: {self.level}\n
                                 ''')
 
     def update_level(self, critical=False):
@@ -40,8 +41,10 @@ class Player():
         """
         if critical:
             self.level += 5
+            print(f'\nNice Moves! You moved 5 levels up to level {self.level}!')
         else:
             self.level += 1
+            print(f'\nLevel Up! You are now level {self.level}')
 
 
 # character classes

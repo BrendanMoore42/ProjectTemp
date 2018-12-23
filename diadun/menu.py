@@ -90,24 +90,27 @@ def run_encounter(player, location):
         """
         pass
 
-    def enemy_status(player_attack=1, critical=False):
+    def enemy_status(player_attack=1, critical=False, buff=False):
         """
         Updates enemies stats on attack
         :param player_attack:
         :param critical: If True, enemy automatically defeated
         :return:
         """
+        print(f'\nEnemy: {enemy.name}\n'
+              f'Health: {enemy.defense}\n')
+
+        print(f"The {player.name} used {player.weapon} with attack power of {player_attack}")
 
         if critical:
             print('Critical attack!! Monster defeated!\n')
             enemy.critical_defeat()
             player.update_level(critical=True)
             run_encounter(player, location)
-
-        print(f'\nEnemy: {enemy.name}\n'
-              f'Health: {enemy.defense}\n')
-
-        print(f"The {player.name} used {player.weapon} with attack power of {player_attack}")
+        if buff:
+            buff_cat = random.choice(['attack', 'defense'])
+            enemy.buff_stat(buff_cat)
+            print(f'\n{enemy.name} {buff_cat} Buffed!')
 
         enemy.update_health(player_attack=player_attack)
 
@@ -117,10 +120,9 @@ def run_encounter(player, location):
     def player_turn(action):
 
         buff = status_buffs[player.status]
-        roll = float(roll_attack())
-
         # attack
         if action == '1':
+            roll = float(roll_attack())
             attack_power = round((player.attack + player.level + buff)/roll, 2)
 
             print(f"Status buff: x {buff}\n"
@@ -134,44 +136,48 @@ def run_encounter(player, location):
                 sys.exit()
             if 2.1 <= roll <= 3.0:
                 print('\nVery Weak attack!')
-                enemy_status(attack_power)
             if 3.1 <= roll <= 4.0:
                 print('\nWeak attack!')
-                enemy_status(attack_power)
             if 4.1 <= roll <= 5.0:
                 print('\nStrong attack!')
-                enemy_status(attack_power)
             if roll == 5.5:
                 print('\nCritical Success!!')
                 enemy_status(critical=True)
             if 5.1 <= roll <= 6.0:
                 print('\nVery Strong attack!')
-                enemy_status(attack_power)
             if 6.1 <= roll <= 7.0:
                 print('\nStrong attack!')
-                enemy_status(attack_power)
             if 7.1 <= roll <= 9.0:
                 print('\nWeak attack!')
-                enemy_status(attack_power)
             if 9.1 <= roll <= 12.0:
                 print('\nExtremely Weak attack!')
-                enemy_status(attack_power)
             if roll >= 12.1:
-                print('\nAttack Missed! Monster buffed!')
-                enemy_attack(player.level)
+                print('\nAttack Missed!')
+                enemy_status(buff=True)
 
+            enemy_status(attack_power)
 
         # defend
-        if action == 2:
+        if action == '2':
+            roll = float(roll_attack())
             defense_power = player.defense * player.level * buff
-            pass
+
+
+        if action == '3':
+            print(player)
+        if action == '4':
+            print(enemy)
+        if action == '5':
+            print('\nExiting FivePointFive. Thanks for playing!')
+            sys.exit()
+
 
         if enemy.status:
             action = input("1. Attack\n"
                            "2. Defend\n"
                            "3. Check Stats\n"
                            "4. Check Monster\n"
-                           "5. Title screen\n"
+                           "5. Exit\n"
                            ">> ")
             player_turn(action)
 
@@ -179,12 +185,16 @@ def run_encounter(player, location):
         if not enemy.status:
             # enemy is defeated, update level and run next encounter
             player.update_level()
+            run_encounter(player, location)
 
     if player.level % 5 != 0:
         enemy = random.choice(enemies)
         init_action = input(f"\nOh no! a {enemy.name} blocks your path!\n"
                         "1. Attack\n"
                         "2. Defend\n"
+                        "3. Stats\n"
+                        "4. Location\n"
+                        "5. Exit\n"
                         ">> ")
         player_turn(init_action)
 
