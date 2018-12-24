@@ -74,7 +74,11 @@ def start_game(player, environments):
 
 def run_encounter(player, location):
 
-    enemies = [Snail(level=player.level), Ghoul(level=player.level), Hagraven(level=player.level)]
+    enemies = [Snail(level=player.level, attack=player.attack, defense=player.defense),
+               Ghoul(level=player.level, attack=player.attack, defense=player.defense),
+               Hagraven(level=player.level, attack=player.attack, defense=player.defense),
+               Phantom(level=player.level, attack=player.attack, defense=player.defense),
+               Troll(level=player.level, attack=player.attack, defense=player.defense)]
 
     def boss_encounter():
         pass
@@ -110,6 +114,7 @@ def run_encounter(player, location):
             print(f'\n{enemy.name} {buff_cat} Buffed!')
 
         enemy.update_health(player_attack=player_attack)
+
 
     def player_turn(action):
 
@@ -174,6 +179,8 @@ def run_encounter(player, location):
         if action == '4':
             print(enemy)
         if action == '5':
+            print(location)
+        if action == '6':
             print('\nExiting FivePointFive. Thanks for playing!')
             sys.exit()
 
@@ -183,7 +190,8 @@ def run_encounter(player, location):
                            "2. Defend\n"
                            "3. Check Stats\n"
                            "4. Check Monster\n"
-                           "5. Exit\n"
+                           "5. Location\n"
+                           "6. Exit\n"
                            ">> ")
             player_turn(action)
 
@@ -197,11 +205,12 @@ def run_encounter(player, location):
         enemy = random.choice(enemies)
         init_action = input(f"\nOh no! a {enemy.name} blocks your path!\n"
                         "1. Attack\n"
-                        "2. Defend\n"
-                        "3. Stats\n"
-                        "4. Location\n"
-                        "5. Exit\n"
-                        ">> ")
+                       "2. Defend\n"
+                       "3. Check Stats\n"
+                       "4. Check Monster\n"
+                       "5. Location\n"
+                       "6. Exit\n"
+                       ">> ")
         player_turn(init_action)
 
 
