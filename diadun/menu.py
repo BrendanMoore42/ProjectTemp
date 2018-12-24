@@ -86,36 +86,41 @@ def run_encounter(player, location):
     def roll_attack():
         return input("\nEnter Blood Sugar: ")
 
-    def enemy_attack():
+    def action_select():
+        return random.choice(['attack', 'defense'])
+
+    def enemy_action(player_defense, player_attack):
         """
-        if buff, attack was missed, so monster gets 1.25x boost
-        :param level: player level dictates strength of enemy -> attack
-        :return:
+
         """
-        stats_rand = random.choice([0.05, 0.1, 0.15, 0.2, 0.25, 0.35, 0.5])
-        power = enemy.attack - (enemy.attack * stats_rand)
-        return power
+        action = action_select()
+        action_power = random.choice([0.05, 0.1, 0.15, 0.2, 0.25, 0.35, 0.5])
+
+        print(f'{enemy.name} chose to {action}!')
+
+        if action == 'attack':
+            power = enemy.attack - (enemy.attack * action_power)
+            player.update_defense(enemy_attack=power)
+        if action == 'defense':
+            enemy.update_health(player_attack=player_attack)
 
 
-    def enemy_status(attack_power=None, defense_power=None, critical_attack=False, critical_block=False, buff=False):
+    def enemy_status(attack_power=None, defense_power=None, critical_attack=False, critical_block=False, enemy_buff=False):
         """
         Updates enemies stats on attack
         :param player_attack:
         :param critical: If True, enemy automatically defeated
         :return:
         """
-        def buff_select():
-            return random.choice(['attack', 'defense'])
 
         if attack_power != None:
             print(f"The {player.name} used {player.weapon} with attack power of {attack_power}\n")
-            enemy.update_health(attack_power=attack_power)
+            enemy.update_health(player_attack=attack_power)
+            enemy_action()
 
         if defense_power != None:
             print(f"The {player.name} shielded {enemy.weapon} with defense power of {defense_power}\n")
-            enemy_power = enemy_attack()
-            print(enemy_power)
-            player.update_defense(defense_power=defense_power, enemy_attack=enemy_power)
+
 
         if critical_attack:
             print(f'Critical attack!! {enemy.name} defeated!\n')
@@ -124,14 +129,15 @@ def run_encounter(player, location):
             run_encounter(player, location)
 
         if critical_block:
-            buff_cat = buff_select()
+            buff_cat = action_select()
             player.buff_stat(buff_cat)
             print(f'Critical Block! {player.name} {buff_cat} Buffed!')
 
-        if buff:
-            buff_cat = buff_select()
-            enemy.buff_stat(buff_cat)
-            print(f'\n{enemy.name} {buff_cat} Buffed!')
+        if enemy_buff:
+            if enemy.defense > 0:
+                buff_cat = action_select()
+                enemy.buff_stat(buff_cat)
+                print(f'\n{enemy.name} {buff_cat} Buffed!')
 
 
     def player_turn(action):
@@ -144,6 +150,7 @@ def run_encounter(player, location):
                 sys.exit()
             if 2.1 <= roll <= 3.0:
                 power = round((player.attack / 12 + roll * buff), 2)
+                enemy_status(attack_power=power, enemy_buff=True)
                 print('\nVery Weak attack!')
             if 3.1 <= roll <= 4.0:
                 power = round((player.attack / 8 + (roll * 1.25) * buff), 2)
@@ -165,11 +172,13 @@ def run_encounter(player, location):
             if 9.1 <= roll <= 12.0:
                 power = round((player.attack / 12 + roll * buff), 2)
                 print('\nExtremely Weak attack!')
+                enemy_status(attack_power=power, enemy_buff=True)
             if roll >= 12.1:
                 print('\nAttack Missed!')
-                enemy_status(buff=True)
+                enemy_status(enemy_buff=True)
 
             enemy_status(attack_power=power)
+
 
         def defense_power(roll, buff):
             if 0 < roll <= 2.0:
@@ -179,6 +188,7 @@ def run_encounter(player, location):
                 sys.exit()
             if 2.1 <= roll <= 3.0:
                 power = round((player.defense / 12 + roll * buff), 2)
+                enemy_status(defense_power=power, enemy_buff=True)
                 print('\nVery Weak defense!')
             if 3.1 <= roll <= 4.0:
                 power = round((player.defense / 8 + (roll * 1.25) * buff), 2)
@@ -200,36 +210,37 @@ def run_encounter(player, location):
                 print('\nWeak defense!')
             if 9.1 <= roll <= 12.0:
                 power = round((player.defense / 12 + roll * buff), 2)
+                enemy_status(defense_power=power, enemy_buff=True)
                 print('\nExtremely Weak defense!')
             if roll >= 12.1:
                 print('\n!')
-                enemy_status(buff=True)
+                enemy_status(enemy_buff=True)
 
             enemy_status(defense_power=power)
 
-        buff = status_buffs[player.status]
 
+        buff = status_buffs[player.status]
 
         # attack
         if action == '1':
             roll = float(roll_attack())
             attack_power(roll, buff)
-
         # defend
         if action == '2':
             roll = float(roll_attack())
             defense_power(roll, buff)
-
-
+        # check player stats
         if action == '3':
             print(player)
+        # check enemy stats
         if action == '4':
             print(enemy)
+        # check location
         if action == '5':
             print(f'\nLocation: {location}')
+        # title
         if action == '6':
-            print('\nExiting FivePointFive. Thanks for playing!')
-            sys.exit()
+            title_screen()
 
 
         if enemy.status:
@@ -238,15 +249,15 @@ def run_encounter(player, location):
                            "3. Check Stats\n"
                            "4. Check Monster\n"
                            "5. Location\n"
-                           "6. Exit\n"
+                           "6. Title Screen\n"
                            ">> ")
             player_turn(action)
-
 
         if not enemy.status:
             # enemy is defeated, update level and run next encounter
             player.update_level()
             run_encounter(player, location)
+
 
     if player.level % 5 != 0:
         enemy = random.choice(enemies)
@@ -256,13 +267,15 @@ def run_encounter(player, location):
                        "3. Check Stats\n"
                        "4. Check Monster\n"
                        "5. Location\n"
-                       "6. Exit\n"
+                       "6. Title Screen\n"
                        ">> ")
         player_turn(init_action)
 
 
     if player.level % 5 == 0:
+        print('\n\n\nboss encounter!')
         boss_encounter()
+
 
 
 

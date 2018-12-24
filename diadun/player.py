@@ -41,16 +41,16 @@ class Player():
         """
         if critical:
             self.level += 5
-            self.attack = round(self.attack * 3.75, 2)
-            self.defense = round(self.defense * 3.75, 2)
+            self.attack = round(self.attack * 1.35, 2)
+            self.defense = round(self.defense * 1.35, 2)
             print(f'\nNice Moves! You moved 5 levels up to level {self.level}!')
         else:
             self.level += 1
-            self.attack = round(self.attack * 1.75, 2)
-            self.defense = round(self.defense * 1.75, 2)
+            self.attack = round(self.attack * 1.15, 2)
+            self.defense = round(self.defense * 1.15, 2)
             print(f'\nLevel Up! You are now level {self.level}')
 
-    def update_defense(self, defense_power, enemy_attack):
+    def update_defense(self, enemy_attack):
         self.defense -= enemy_attack
 
         if self.defense <= 0:
@@ -60,9 +60,9 @@ class Player():
 
     def buff_stat(self, category):
         if category == 'attack':
-            self.attack = round(self.attack * 1.5)
+            self.attack = round(self.attack * 1.15)
         if category == 'defense':
-            self.defense = round(self.defense * 1.5)
+            self.defense = round(self.defense * 1.15)
 
 
     def roll_stats(self, category):

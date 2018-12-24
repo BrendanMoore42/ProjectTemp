@@ -31,8 +31,8 @@ class Enemy():
                                 ''')
 
 
-    def update_health(self, attack_power):
-        self.defense -= attack_power
+    def update_health(self, player_attack):
+        self.defense -= player_attack
         self.defense = round(self.defense)
 
         if self.defense <= 0:
