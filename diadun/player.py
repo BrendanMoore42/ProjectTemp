@@ -26,8 +26,8 @@ class Player():
     def __str__(self):
         return textwrap.dedent(f'''\n
                                 Name: {self.name}
-                                Attack: {self.attack}
-                                Defense: {self.defense}
+                                Attack: {round(self.attack, 2)}
+                                Defense: {round(self.defense, 2)}
                                 Weapon: {self.weapon}
                                 Status: {self.status}
                                 Level: {self.level}\n
@@ -49,6 +49,20 @@ class Player():
             self.attack = round(self.attack * 1.75, 2)
             self.defense = round(self.defense * 1.75, 2)
             print(f'\nLevel Up! You are now level {self.level}')
+
+    def update_defense(self, defense_power, enemy_attack):
+        self.defense -= enemy_attack
+
+        if self.defense <= 0:
+            self.defense = 0
+            print('Oh no! You were defeated. Play again?\n')
+
+
+    def buff_stat(self, category):
+        if category == 'attack':
+            self.attack = round(self.attack * 1.5)
+        if category == 'defense':
+            self.defense = round(self.defense * 1.5)
 
 
     def roll_stats(self, category):

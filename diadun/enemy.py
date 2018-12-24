@@ -26,13 +26,13 @@ class Enemy():
     def __str__(self):
         return textwrap.dedent(f'''\n
                                 Name: {self.name}
-                                Attack: {self.attack}
-                                Defense: {self.defense}\n
+                                Attack: {round(self.attack, 2)}
+                                Defense: {round(self.defense, 2)}\n
                                 ''')
 
 
-    def update_health(self, player_attack):
-        self.defense -= player_attack
+    def update_health(self, attack_power):
+        self.defense -= attack_power
         self.defense = round(self.defense)
 
         if self.defense <= 0:
@@ -63,32 +63,31 @@ class Enemy():
 
         def get_lower_range(whole, percent=0):
             lower = whole - (percent * whole)
-            if lower <= 5:
+            if lower == 0:
                 lower = whole * random.uniform(0.5, 1.5)
             return int(lower)
 
+
         def get_upper_range(whole, percent=0):
             upper = (percent * whole) + whole
-            if upper <= 5:
-                upper = whole * random.uniform(0.5, 1.5)
             return int(upper)
 
 
         if category == 1:
-            self.attack = random.randint(get_lower_range(0.75, self.attack), get_upper_range(self.attack))
-            self.defense = random.randint(get_lower_range(0.15, self.defense), get_upper_range(0.25, self.defense))
+            self.attack = random.randint(get_lower_range(self.attack, 0.75), get_upper_range(self.attack))
+            self.defense = random.randint(get_lower_range(self.defense, 0.15), get_upper_range(self.defense, 0.25))
         if category == 2:
-            self.attack = random.randint(get_lower_range(0.15, self.attack), get_upper_range(0.35, self.attack))
-            self.defense = random.randint(get_lower_range(0.75, self.defense), get_upper_range(self.defense))
+            self.attack = random.randint(get_lower_range(self.attack, 0.15), get_upper_range(self.attack, 0.15))
+            self.defense = random.randint(get_lower_range(self.defense, 0.75), get_upper_range(self.defense))
         if category == 3:
-            self.attack = random.randint(get_lower_range(0.5, self.attack), get_upper_range(0.5, self.attack))
-            self.defense = random.randint(get_lower_range(0.5, self.defense), get_upper_range(0.5, self.defense))
+            self.attack = random.randint(get_lower_range(self.attack, 0.5), get_upper_range(self.attack, 0.5))
+            self.defense = random.randint(get_lower_range(self.defense, 0.5), get_upper_range(self.defense, 0.5))
         if category == 4:
-            self.attack = random.randint(get_lower_range(0.75, self.attack), get_upper_range(-0.15, self.attack))
-            self.defense = random.randint(get_lower_range(0.75, self.defense), get_upper_range(-0.15, self.defense))
+            self.attack = random.randint(get_lower_range(self.attack, 0.75), get_upper_range(self.attack, -0.15))
+            self.defense = random.randint(get_lower_range(self.defense, 0.75), get_upper_range(self.defense, -0.15))
         if category == 5:
-            self.attack = random.randint(get_lower_range(0.05, self.attack), get_upper_range(0.65, self.attack))
-            self.defense = random.randint(get_lower_range(0.05, self.defense), get_upper_range(0.65, self.defense))
+            self.attack = random.randint(get_lower_range(self.attack, 0.05), get_upper_range(self.attack, 0.65))
+            self.defense = random.randint(get_lower_range(self.defense, 0.05), get_upper_range(self.defense, 0.65))
 
 # enemy classes
 class Snail(Enemy):
