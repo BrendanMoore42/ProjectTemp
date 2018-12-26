@@ -89,20 +89,34 @@ def run_encounter(player, location):
     def action_select():
         return random.choice(['attack', 'defense'])
 
-    def enemy_action(player_defense, player_attack):
+    def enemy_turn(player_action, player_power):
         """
 
         """
-        action = action_select()
-        action_power = random.choice([0.05, 0.1, 0.15, 0.2, 0.25, 0.35, 0.5])
+        enemy_action = action_select()
+        enemy_power = random.choice([0.05, 0.1, 0.15, 0.2, 0.25, 0.35, 0.5])
 
-        print(f'{enemy.name} chose to {action}!')
+        def turn_outcome(player, enemy):
+            """
+            compares each members choices and creates outcome
+            :param player:
+            :param enemy:
+            :return:
+            """
 
-        if action == 'attack':
-            power = enemy.attack - (enemy.attack * action_power)
+
+        if player_action == 'attack':
+            power = enemy.attack - (enemy.attack * enemy_power)
+            print(f'{enemy.name} chose to {action} with a strength of {power}!')
+
             player.update_defense(enemy_attack=power)
-        if action == 'defense':
+        if player_action == 'defense':
+            power = enemy.defense - (enemy.defense * enemy_power)
+            print(f'{enemy.name} chose to {action} with a strength of {power}!')
+
             enemy.update_health(player_attack=player_attack)
+
+        turn_outcome()
 
 
     def enemy_status(attack_power=None, defense_power=None, critical_attack=False, critical_block=False, enemy_buff=False):
@@ -114,13 +128,13 @@ def run_encounter(player, location):
         """
 
         if attack_power != None:
-            print(f"The {player.name} used {player.weapon} with attack power of {attack_power}\n")
-            enemy.update_health(player_attack=attack_power)
-            enemy_action()
+            enemy_turn('attack', attack_power)
+            # print(f"The {player.name} used {player.weapon} with attack power of {attack_power}\n")
+            #enemy.update_health(player_attack=attack_power)
 
         if defense_power != None:
-            print(f"The {player.name} shielded {enemy.weapon} with defense power of {defense_power}\n")
-
+            enemy_turn('defense', defense_power)
+            # print(f"The {player.name} shielded {enemy.weapon} with defense power of {defense_power}\n")
 
         if critical_attack:
             print(f'Critical attack!! {enemy.name} defeated!\n')
@@ -131,7 +145,7 @@ def run_encounter(player, location):
         if critical_block:
             buff_cat = action_select()
             player.buff_stat(buff_cat)
-            print(f'Critical Block! {player.name} {buff_cat} Buffed!')
+            print(f'Critical Block! {player.name} {buff_cat} Buffed! {enemy.weapon} Missed!')
 
         if enemy_buff:
             if enemy.defense > 0:
@@ -217,6 +231,7 @@ def run_encounter(player, location):
                 enemy_status(enemy_buff=True)
 
             enemy_status(defense_power=power)
+
 
 
         buff = status_buffs[player.status]

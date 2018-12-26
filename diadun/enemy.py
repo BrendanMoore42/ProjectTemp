@@ -51,6 +51,9 @@ class Enemy():
         if category == 'defense':
             self.defense = round(self.defense * 1.5)
 
+    def action_defense(self):
+        enemy.status =
+
     def roll_stats(self, category):
         """
         Generates random enemy starter stats. Category is type of character.
