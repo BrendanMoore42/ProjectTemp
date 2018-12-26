@@ -31,13 +31,12 @@ class Enemy():
                                 ''')
 
 
-    def update_health(self, player_attack):
+    def update_defense(self, player_attack):
         self.defense -= player_attack
         self.defense = round(self.defense)
 
         if self.defense <= 0:
             print(f'\n{self.name} defeated!')
-            self.defense = 0
             self.status = False
         if self.defense > 0:
             print(f'{self.name} Defense: {self.defense}')

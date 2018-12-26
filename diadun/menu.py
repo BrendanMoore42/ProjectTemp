@@ -11,7 +11,7 @@ Player classes
 Warrior, Princess, Wizard
 
 Enemies:
-Scary Snail, Gaseous Ghoul, Hairy Hagraven, Dangerous Dragon
+Scary Snail, Gaseous Ghoul, Hairy Hagraven, Phenomenal Phantom, Terrible Troll, Dangerous Dragon
 
 """
 import os, cmd, sys
@@ -96,7 +96,7 @@ def run_encounter(player, location):
         enemy_action = action_select()
         enemy_power = random.choice([0.05, 0.1, 0.15, 0.2, 0.25, 0.35, 0.5])
 
-        def turn_outcome(player, enemy):
+        def turn_outcome(action, player, enemy):
             """
             compares each members choices and creates outcome
             :param player:
@@ -104,17 +104,24 @@ def run_encounter(player, location):
             :return:
             """
 
+            if action == "attack":
 
-        if player_action == 'attack':
-            power = enemy.attack - (enemy.attack * enemy_power)
-            print(f'{enemy.name} chose to {action} with a strength of {power}!')
 
-            player.update_defense(enemy_attack=power)
-        if player_action == 'defense':
+
+
+        if enemy_action == 'attack':
+            enemy_attack = enemy.attack - (enemy.attack * enemy_power)
+            print(f'{enemy.name} chose to {enemy_action} with a strength of {power}!')
+
+            player.update_defense(enemy_attack=enemy_attack)
+            enemy.update_defense(player_attack=player_power)
+
+
+        if enemy_action == 'defense':
             power = enemy.defense - (enemy.defense * enemy_power)
-            print(f'{enemy.name} chose to {action} with a strength of {power}!')
+            print(f'{enemy.name} chose to {enemy_action} with a strength of {power}!')
 
-            enemy.update_health(player_attack=player_attack)
+            enemy.update_defense(player_attack=player_attack)
 
         turn_outcome()
 

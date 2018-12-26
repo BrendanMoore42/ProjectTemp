@@ -52,10 +52,12 @@ class Player():
 
     def update_defense(self, enemy_attack):
         self.defense -= enemy_attack
+        self.defense = round(self.defense)
 
         if self.defense <= 0:
             self.defense = 0
             print('Oh no! You were defeated. Play again?\n')
+            # loss_screen():
 
 
     def buff_stat(self, category):
