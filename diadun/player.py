@@ -50,6 +50,7 @@ class Player():
             self.defense = round(self.defense * 1.15, 2)
             print(f'\nLevel Up! You are now level {self.level}')
 
+
     def update_defense(self, enemy_attack):
         self.defense -= enemy_attack
         self.defense = round(self.defense)
@@ -59,6 +60,9 @@ class Player():
             print('Oh no! You were defeated. Play again?\n')
             # loss_screen():
 
+    def recover(self):
+        self.defense = self.defense + (self.defense * 0.25)
+        self.defense = round(self.defense)
 
     def buff_stat(self, category):
         if category == 'attack':

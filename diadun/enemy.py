@@ -50,6 +50,10 @@ class Enemy():
         if category == 'defense':
             self.defense = round(self.defense * 1.5)
 
+    def recover(self):
+        self.defense = self.defense + (self.defense * 0.05)
+        self.defense = round(self.defense)
+
     def action_defense(self):
         enemy.status =
 

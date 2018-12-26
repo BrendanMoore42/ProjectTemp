@@ -104,26 +104,40 @@ def run_encounter(player, location):
             :return:
             """
 
-            if action == "attack":
+            if action == 'both_attack':
+                player.update_defense(enemy_attack=enemy)
+                enemy.update_defense(player_attack=player)
+            if action == 'player_attack':
+                attack = player-enemy
+                enemy.update_defense(player_attack=attack)
+            if action == 'both_defend':
+                player.recover()
+                enemy.recover()
+            if action == 'player_defend':
+                attack = enemy-player
+                player.update_defense(enemy_attack=attack)
 
-
-
-
-        if enemy_action == 'attack':
+        # both attack
+        if enemy_action == 'attack' == player_action:
             enemy_attack = enemy.attack - (enemy.attack * enemy_power)
-            print(f'{enemy.name} chose to {enemy_action} with a strength of {power}!')
+            turn_outcome('both_attack', player_power, enemy_attack)
+            #print(f'{enemy.name} chose to {enemy_action} with a strength of {power}!')
 
-            player.update_defense(enemy_attack=enemy_attack)
-            enemy.update_defense(player_attack=player_power)
+        # player defends attack
+        if enemy_action == 'attack' != player_action:
+            enemy_attack = enemy.attack - (enemy.attack * enemy_power)
+            turn_outcome('player_defend', player_power, enemy_attack)
 
+        # both defend
+        if enemy_action == 'defense' == player_action:
+            enemy_defense = enemy.defense - (enemy.defense * enemy_power)
+            turn_outcome('both_defend', player_power, enemy_defense)
 
-        if enemy_action == 'defense':
-            power = enemy.defense - (enemy.defense * enemy_power)
-            print(f'{enemy.name} chose to {enemy_action} with a strength of {power}!')
+        # enemy shield player attacks
+        if enemy_action == 'defense' != player_action:
+            enemy_defense = enemy.defense - (enemy.defense * enemy_power)
+            turn_outcome('player_attack', player_power, enemy_defense)
 
-            enemy.update_defense(player_attack=player_attack)
-
-        turn_outcome()
 
 
     def enemy_status(attack_power=None, defense_power=None, critical_attack=False, critical_block=False, enemy_buff=False):
