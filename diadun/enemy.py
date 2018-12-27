@@ -51,11 +51,12 @@ class Enemy():
             self.defense = round(self.defense * 1.5)
 
     def recover(self):
-        self.defense = self.defense + (self.defense * 0.05)
-        self.defense = round(self.defense)
+        rec = self.defense + (self.defense * 0.05)
+        self.defense = round(rec)
+        print(f'{self.name} Recovered {rec}')s
 
-    def action_defense(self):
-        enemy.status =
+    # def action_defense(self):
+    #     enemy.status =
 
     def roll_stats(self, category):
         """

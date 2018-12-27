@@ -61,8 +61,9 @@ class Player():
             # loss_screen():
 
     def recover(self):
-        self.defense = self.defense + (self.defense * 0.25)
-        self.defense = round(self.defense)
+        rec = self.defense + (self.defense * 0.25)
+        self.defense = round(rec)
+        print(f'{self.name} Recovered {rec}')
 
     def buff_stat(self, category):
         if category == 'attack':
