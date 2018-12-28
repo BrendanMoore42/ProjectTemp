@@ -53,7 +53,7 @@ class Enemy():
     def recover(self):
         rec = self.defense + (self.defense * 0.05)
         self.defense = round(rec)
-        print(f'{self.name} Recovered {rec}')s
+        print(f'{self.name} defense recovered {rec}!')
 
     # def action_defense(self):
     #     enemy.status =
@@ -145,7 +145,7 @@ class Hagraven(Enemy):
 
 class Phantom(Enemy):
 
-    def __init__(self, level, attack, defense, name='Scary Snail', weapon="Slime Squall", status=True):
+    def __init__(self, level, attack, defense, name='Phenomenal Phantom', weapon="Perilous Punch", status=True):
         self.level = level
         self.name = name
         self.attack = attack
@@ -161,7 +161,7 @@ class Phantom(Enemy):
 
 class Troll(Enemy):
 
-    def __init__(self, level, attack, defense, name='Scary Snail', weapon="Slime Squall", status=True):
+    def __init__(self, level, attack, defense, name='Terrible Troll', weapon="Heavy Club", status=True):
         self.level = level
         self.name = name
         self.attack = attack
