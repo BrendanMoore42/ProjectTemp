@@ -39,6 +39,9 @@ status_buffs = {'Buffed': 1.5,
                 'Injured': 0.25,
                 'Ghost': 1}
 
+# set player variables
+max_defense = []
+
 # functions block
 def choose_character():
 
@@ -73,8 +76,15 @@ def start_game(player, environments):
 
 
 def run_encounter(player, location):
-
+    # set enemy variables
+    enemy = None
     enemies = [Snail(level=player.level, attack=player.attack, defense=player.defense),
+               Ghoul(level=player.level, attack=player.attack, defense=player.defense),
+               Hagraven(level=player.level, attack=player.attack, defense=player.defense),
+               Phantom(level=player.level, attack=player.attack, defense=player.defense),
+               Troll(level=player.level, attack=player.attack, defense=player.defense)]
+
+    bosses = [Dragon(level=player.level, attack=player.attack, defense=player.defense),
                Ghoul(level=player.level, attack=player.attack, defense=player.defense),
                Hagraven(level=player.level, attack=player.attack, defense=player.defense),
                Phantom(level=player.level, attack=player.attack, defense=player.defense),
@@ -83,18 +93,17 @@ def run_encounter(player, location):
     def boss_encounter():
         pass
 
-    def roll_attack():
-        return input("\nEnter Blood Sugar: ")
 
     def action_select():
         return random.choice(['attack', 'defense'])
+
 
     def enemy_turn(player_action, player_power):
         """
 
         """
         enemy_action = action_select()
-        enemy_power = random.choice([0.05, 0.1, 0.15, 0.2, 0.25, 0.35, 0.5])
+        enemy_power = random.choice([0.15, 0.2, 0.25, 0.35, 0.5, 0.65, 0.75])
 
         print(f'\n{enemy.name} chose {enemy_action} with strength of {enemy.attack - (enemy.attack * enemy_power)}!')
 
@@ -105,10 +114,16 @@ def run_encounter(player, location):
             :param enemy:
             :return:
             """
+            player_power = round(player_power, 2)
+            enemy_power = round(enemy_power, 2)
 
+            print(f"action: {action}, player: {player_power}, enemy: {enemy_power}")
             if action == 'both_attack':
-                player.update_defense(enemy_attack=enemy_power)
                 enemy.update_defense(player_attack=player_power)
+                if not enemy.status:
+                    player.update_level(max(max_defense))
+                    run_encounter(player, location)
+                player.update_defense(enemy_attack=enemy_power)
             if action == 'player_attack':
                 attack = round(player_power-enemy_power)
                 enemy.update_defense(player_attack=attack)
@@ -122,7 +137,6 @@ def run_encounter(player, location):
 
         # both attack
         if enemy_action == 'attack' == player_action:
-
             enemy_attack = enemy.attack - (enemy.attack * enemy_power)
             turn_outcome('both_attack', player_power, enemy_attack)
 
@@ -160,7 +174,7 @@ def run_encounter(player, location):
         if critical_attack:
             print(f'Critical attack!! {enemy.name} defeated!\n')
             enemy.critical_defeat()
-            player.update_level(critical=True)
+            player.update_level(critical=True, max_defense=max(max_defense))
             run_encounter(player, location)
 
         if critical_block:
@@ -173,11 +187,16 @@ def run_encounter(player, location):
                 buff_cat = action_select()
                 enemy.buff_stat(buff_cat)
                 print(f'\n{enemy.name} {buff_cat} Buffed!')
+                action()
 
 
     def player_turn(action):
 
         buff = status_buffs[player.status]
+
+        # store defense value
+        max_defense.append(player.defense)
+        print(max_defense)
 
         def attack_power(roll, buff):
             if 0 < roll <= 2.0:
@@ -255,6 +274,15 @@ def run_encounter(player, location):
 
             enemy_status(defense_power=power)
 
+        def roll_attack():
+            x = ''
+            while not isinstance(x, float):
+                roll = input("\nEnter Blood Sugar: ")
+                try:
+                    x = float(roll)
+                    return roll
+                except (ValueError, TypeError):
+                    print('error')
 
         # attack
         if action == '1':
@@ -277,7 +305,6 @@ def run_encounter(player, location):
         if action == '6':
             title_screen()
 
-
         if enemy.status:
             action = input("1. Attack\n"
                            "2. Defend\n"
@@ -290,26 +317,27 @@ def run_encounter(player, location):
 
         if not enemy.status:
             # enemy is defeated, update level and run next encounter
-            player.update_level()
+            player.update_level(max_defense=max(max_defense))
             run_encounter(player, location)
 
 
     if player.level % 5 != 0:
         enemy = random.choice(enemies)
         init_action = input(f"\nOh no! a {enemy.name} blocks your path!\n"
-                        "1. Attack\n"
-                       "2. Defend\n"
-                       "3. Check Stats\n"
-                       "4. Check Monster\n"
-                       "5. Location\n"
-                       "6. Title Screen\n"
-                       ">> ")
+                            "1. Attack\n"
+                            "2. Defend\n"
+                            "3. Check Stats\n"
+                            "4. Check Monster\n"
+                            "5. Location\n"
+                            "6. Title Screen\n"
+                            ">> ")
         player_turn(init_action)
 
 
     if player.level % 5 == 0:
         print('\n\n\nboss encounter!')
-        boss_encounter()
+        boss = random.choice(bosses)
+        boss_encounter(boss)
 
 
 def help_menu():
@@ -340,6 +368,8 @@ def menu_nav(option):
 
 
 def title_screen():
+    # set player variables
+    max_defense = []
 
     print("Welcome to DiaDungeon!\n\n"
           "Play: Press 'p' to start game\n"

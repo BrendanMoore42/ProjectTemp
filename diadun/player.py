@@ -14,7 +14,7 @@ import textwrap
 # player meta class
 class Player():
 
-    def __init__(self, name, weapon, level=1, status='Strong', attack=5, defense=5):
+    def __init__(self, name, weapon, level=1, status='Strong', attack=5, defense=5, loss=False):
         self.name = name
         self.level = level
         self.attack = attack
@@ -34,17 +34,21 @@ class Player():
                                 ''')
 
 
-    def update_level(self, critical=False):
+    def update_level(self, max_defense, critical=False):
         """
         If monster defeated, level up. If critical strike, level up 5 levels.
         :return:
         """
+
         if critical:
+            self.defense = max_defense
             self.level += 5
             self.attack = round(self.attack * 1.35, 2)
             self.defense = round(self.defense * 1.35, 2)
             print(f'\nNice Moves! You moved 5 levels up to level {self.level}!')
         else:
+            if self.defense < max_defense:
+                self.defense = max_defense*0.75
             self.level += 1
             self.attack = round(self.attack * 1.15, 2)
             self.defense = round(self.defense * 1.15, 2)
@@ -57,13 +61,12 @@ class Player():
 
         if self.defense <= 0:
             self.defense = 0
-            print('Oh no! You were defeated. Play again?\n')
-            # loss_screen():
+            print('Oh no! You were defeated. Restarting game.\n')
 
     def recover(self):
         rec = self.defense + (self.defense * 0.25)
         self.defense = round(rec)
-        print(f'{self.name} Recovered {rec}')
+        print(f'{self.name} recovered {round(self.defense * 0.25)}')
 
     def buff_stat(self, category):
         if category == 'attack':
@@ -88,6 +91,7 @@ class Player():
         if category == 3:
             self.attack = random.randint(4, 16)
             self.defense = random.randint(4, 16)
+
 
 
 

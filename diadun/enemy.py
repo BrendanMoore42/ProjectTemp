@@ -8,9 +8,11 @@ Scary Snail, Gaseous Ghoul, Hairy Hagraven, Phenomenal Phantom, Terrible Troll, 
 
 """
 
+import textwrap
 import os, cmd, sys
 import time, random
-import textwrap
+
+from menu import action_select
 
 # enemy meta classs
 class Enemy():
@@ -32,14 +34,14 @@ class Enemy():
 
 
     def update_defense(self, player_attack):
-        self.defense -= player_attack
+        self.defense = self.defense - player_attack
         self.defense = round(self.defense)
 
         if self.defense <= 0:
             print(f'\n{self.name} defeated!')
             self.status = False
         if self.defense > 0:
-            print(f'{self.name} Defense: {self.defense}')
+            print(f'{self.name} defense: {self.defense}')
 
     def critical_defeat(self):
         self.status = False
@@ -53,10 +55,12 @@ class Enemy():
     def recover(self):
         rec = self.defense + (self.defense * 0.05)
         self.defense = round(rec)
-        print(f'{self.name} defense recovered {rec}!')
+        print(f'{self.name} defense recovered {round(self.defense * 0.25)}!')
 
-    # def action_defense(self):
-    #     enemy.status =
+    def check_status(self):
+        if self.defense <= 0:
+            self.status = False
+            print('enemy defeated')
 
     def roll_stats(self, category):
         """
@@ -177,9 +181,20 @@ class Troll(Enemy):
 # bosses
 class Dragon(Enemy):
 
-    def __init__(self, name='Dangerous Dragon', weapon="Fire Breath", attack=50, defense=100, status=True):
-        super().__init__(name=name, weapon=weapon, attack=attack*player_level, defense=defense*player_level)
+    def __init__(self, level, attack, defense, name='Dangerous Dragon', weapon="Fearsome Firebreath", status=True):
+        self.level = level
+        self.name = name
+        self.attack = attack
+        self.defense = defense
+        self.weapon = weapon
+        self.status = status
+
+        boss_random = random.randint(1,5)
+        action = action_select()
+
+        super().roll_stats(category=boss_random)
+        super().buff_stat(action)
+        # super().__init__(player_level=player_level, name=name, weapon=weapon, attack=attack*player_level, defense=defense*player_level)
 
     def __str__(self):
         return super().__str__()
-
