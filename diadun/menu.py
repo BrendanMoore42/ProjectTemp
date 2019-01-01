@@ -22,7 +22,8 @@ from enemy import *
 
 # environment variables
 menu_options = ['b', 'back', 'q', 'quit',
-                'p', 'play', 'h', 'help']
+                'p', 'play', 'h', 'help',
+                'n', 'newgame']
 
 characters = {'1': Warrior(),
               '2': Princess(),
@@ -128,12 +129,13 @@ def run_encounter(player, location):
                 attack = round(player_power-enemy_power)
                 enemy.update_defense(player_attack=attack)
             if action == 'both_defend':
-                print(f'')
                 player.recover()
                 enemy.recover()
             if action == 'player_defend':
                 attack = round(enemy_power-player_power)
                 player.update_defense(enemy_attack=attack)
+            player_turn(None)
+
 
         # both attack
         if enemy_action == 'attack' == player_action:
@@ -164,19 +166,6 @@ def run_encounter(player, location):
         :return:
         """
 
-        if attack_power != None:
-            enemy_turn('attack', attack_power)
-
-        if defense_power != None:
-            enemy_turn('defense', defense_power)
-            # print(f"The {player.name} shielded {enemy.weapon} with defense power of {defense_power}\n")
-
-        if critical_attack:
-            print(f'Critical attack!! {enemy.name} defeated!\n')
-            enemy.critical_defeat()
-            player.update_level(critical=True, max_defense=max(max_defense))
-            run_encounter(player, location)
-
         if critical_block:
             buff_cat = action_select()
             player.buff_stat(buff_cat)
@@ -187,7 +176,18 @@ def run_encounter(player, location):
                 buff_cat = action_select()
                 enemy.buff_stat(buff_cat)
                 print(f'\n{enemy.name} {buff_cat} Buffed!')
-                action()
+
+        if critical_attack:
+            print(f'Critical attack!! {enemy.name} defeated!\n')
+            enemy.critical_defeat()
+            player.update_level(critical=True, max_defense=max(max_defense))
+            run_encounter(player, location)
+
+        if attack_power != None:
+            enemy_turn('attack', attack_power)
+
+        if defense_power != None:
+            enemy_turn('defense', defense_power)
 
 
     def player_turn(action):
@@ -305,7 +305,12 @@ def run_encounter(player, location):
         if action == '6':
             title_screen()
 
+        # check if enemy alive
         if enemy.status:
+            # check if player defeated
+            if not player.status:
+                menu_nav('newgame')
+
             action = input("1. Attack\n"
                            "2. Defend\n"
                            "3. Check Stats\n"
@@ -359,6 +364,11 @@ def menu_nav(option):
         # launch game
         player = choose_character()
         start_game(player, environments)
+    elif option.lower() in ['n', 'new']:
+        # new game, new player
+        player = None
+        player = choose_character()
+        start_game(player, environments)
     elif option.lower() in ['h', 'help']:
         # launch help
         help_menu()
@@ -373,7 +383,7 @@ def title_screen():
 
     print("Welcome to DiaDungeon!\n\n"
           "Play: Press 'p' to start game\n"
-          "Restart: Press 'r' to restart game\n"
+          "New Game: Press 'n' for new game\n"
           "Quit: Press 'q' to exit game\n")
 
     option = input('>> ')

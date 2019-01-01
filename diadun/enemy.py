@@ -12,8 +12,6 @@ import textwrap
 import os, cmd, sys
 import time, random
 
-from menu import action_select
-
 # enemy meta classs
 class Enemy():
 
@@ -43,14 +41,21 @@ class Enemy():
         if self.defense > 0:
             print(f'{self.name} defense: {self.defense}')
 
+
     def critical_defeat(self):
         self.status = False
+
 
     def buff_stat(self, category):
         if category == 'attack':
             self.attack = round(self.attack * 1.5)
         if category == 'defense':
             self.defense = round(self.defense * 1.5)
+
+
+    def action_select(self):
+        return random.choice(['attack', 'defense'])
+
 
     def recover(self):
         rec = self.defense + (self.defense * 0.05)
@@ -116,6 +121,7 @@ class Snail(Enemy):
     def __str__(self):
         return super().__str__()
 
+
 class Ghoul(Enemy):
 
     def __init__(self, level, attack, defense, name='Gaseous Ghoul', weapon="Stink Attack", status=True):
@@ -130,6 +136,7 @@ class Ghoul(Enemy):
     #
     def __str__(self):
         return super().__str__()
+
 
 class Hagraven(Enemy):
 
@@ -178,6 +185,7 @@ class Troll(Enemy):
     def __str__(self):
         return super().__str__()
 
+
 # bosses
 class Dragon(Enemy):
 
@@ -189,8 +197,8 @@ class Dragon(Enemy):
         self.weapon = weapon
         self.status = status
 
-        boss_random = random.randint(1,5)
-        action = action_select()
+        boss_random = random.randint(1, 5)
+        action = super().action_select()
 
         super().roll_stats(category=boss_random)
         super().buff_stat(action)
