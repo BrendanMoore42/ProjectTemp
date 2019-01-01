@@ -189,11 +189,33 @@ class Troll(Enemy):
 # bosses
 class Dragon(Enemy):
 
-    def __init__(self, level, attack, defense, name='Dangerous Dragon', weapon="Fearsome Firebreath", status=True):
+    def __init__(self, level, attack, defense, enemy_type='Boss', name='Dangerous Dragon', weapon="Fearsome Firebreath", status=True):
         self.level = level
         self.name = name
         self.attack = attack
         self.defense = defense
+        self.enemy_type = enemy_type
+        self.weapon = weapon
+        self.status = status
+
+        boss_random = random.randint(1, 5)
+        action = super().action_select()
+
+        super().roll_stats(category=boss_random)
+        super().buff_stat(action)
+        # super().__init__(player_level=player_level, name=name, weapon=weapon, attack=attack*player_level, defense=defense*player_level)
+
+    def __str__(self):
+        return super().__str__()
+
+class Manticore(Enemy):
+
+    def __init__(self, level, attack, defense, enemy_type='Boss', name='Maniacal Manticore', weapon="Savage Sting", status=True):
+        self.level = level
+        self.name = name
+        self.attack = attack
+        self.defense = defense
+        self.enemy_type = enemy_type
         self.weapon = weapon
         self.status = status
 

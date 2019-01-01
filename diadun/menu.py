@@ -38,7 +38,7 @@ status_buffs = {'Buffed': 1.5,
                 'Strong': 1,
                 'Weakened': 0.75,
                 'Injured': 0.25,
-                'Ghost': 1}
+                False: 1}
 
 # set player variables
 max_defense = []
@@ -86,13 +86,14 @@ def run_encounter(player, location):
                Troll(level=player.level, attack=player.attack, defense=player.defense)]
 
     bosses = [Dragon(level=player.level, attack=player.attack, defense=player.defense),
-               Ghoul(level=player.level, attack=player.attack, defense=player.defense),
-               Hagraven(level=player.level, attack=player.attack, defense=player.defense),
-               Phantom(level=player.level, attack=player.attack, defense=player.defense),
-               Troll(level=player.level, attack=player.attack, defense=player.defense)]
+              Ghoul(level=player.level, attack=player.attack, defense=player.defense),
+              Hagraven(level=player.level, attack=player.attack, defense=player.defense),
+              Phantom(level=player.level, attack=player.attack, defense=player.defense),
+              Troll(level=player.level, attack=player.attack, defense=player.defense)]
 
-    def boss_encounter():
-        pass
+    def boss_encounter(boss):
+
+
 
 
     def action_select():
@@ -220,13 +221,13 @@ def run_encounter(player, location):
                 power = round((player.attack / 2 * roll * buff), 2)
                 print(f'\nVery Strong attack: {power}!')
             if 6.1 <= roll <= 7.0:
-                power = round((player.attack / 6 * roll * buff), 2)
+                power = round((player.attack / 6 * roll / 2 * buff), 2)
                 print(f'\nStrong attack: {power}!')
             if 7.1 <= roll <= 9.0:
-                power = round((player.attack / 8 + (roll * 1.25) * buff), 2)
+                power = round((player.attack / 8 + (roll / 4 * 1.25) * buff), 2)
                 print(f'\nWeak attack: {power}!')
             if 9.1 <= roll <= 12.0:
-                power = round((player.attack / 12 + roll * buff), 2)
+                power = round((player.attack / 12 + (roll / 6) * buff), 2)
                 print(f'\nExtremely Weak attack: {power}!')
                 enemy_status(attack_power=power, enemy_buff=True)
             if roll >= 12.1:
@@ -237,12 +238,12 @@ def run_encounter(player, location):
 
 
         def defense_power(roll, buff):
-            if 0 < roll <= 2.0:
+            if 0 < roll <= 1.9:
                 print('\n', '='*25)
                 print('\nBlood Sugar Critically Low SEEK IMMEDIATE CARE\n')
                 print('Exiting game.')
                 sys.exit()
-            if 2.1 <= roll <= 3.0:
+            if 2.0 <= roll <= 3.0:
                 power = round((player.defense / 12 + roll * buff), 2)
                 enemy_status(defense_power=power, enemy_buff=True)
                 print(f'\nVery Weak defense: {power}!')
@@ -308,6 +309,7 @@ def run_encounter(player, location):
         # check if enemy alive
         if enemy.status:
             # check if player defeated
+            print(f'status debug: {player.status}')
             if not player.status:
                 menu_nav('newgame')
 
@@ -325,25 +327,27 @@ def run_encounter(player, location):
             player.update_level(max_defense=max(max_defense))
             run_encounter(player, location)
 
-
+    # standard enemy
     if player.level % 5 != 0:
         enemy = random.choice(enemies)
-        init_action = input(f"\nOh no! a {enemy.name} blocks your path!\n"
-                            "1. Attack\n"
-                            "2. Defend\n"
-                            "3. Check Stats\n"
-                            "4. Check Monster\n"
-                            "5. Location\n"
-                            "6. Title Screen\n"
-                            ">> ")
-        player_turn(init_action)
+        phrase = random.choice(['Oh no', 'Look out', 'Watch yourself', 'Ahh!'])
+        print(f'\n{phrase}! A {enemy.name} blocks your path!\n')
 
-
+    # boss encounter
     if player.level % 5 == 0:
-        print('\n\n\nboss encounter!')
-        boss = random.choice(bosses)
-        boss_encounter(boss)
+        enemy = random.choice(bosses)
+        location = random.choice(environments['Boss'])
+        print(f"\nBoss Battle! You enter the {location} and are attacked by the {enemy.name}!")
 
+    # display menu and initiate turn
+    init_action = input(f"\n1. Attack\n"
+                        "2. Defend\n"
+                        "3. Check Stats\n"
+                        "4. Check Monster\n"
+                        "5. Location\n"
+                        "6. Title Screen\n"
+                        ">> ")
+    player_turn(init_action)
 
 def help_menu():
     print('\n', '='*25)

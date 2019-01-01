@@ -62,7 +62,7 @@ class Player():
         if self.defense <= 0:
             self.defense = 0
             self.status = False
-            print('Oh no! You were defeated. New game.\n')
+            print('Oh no! You were defeated.\n')
 
     def recover(self):
         rec = self.defense + (self.defense * 0.25)
