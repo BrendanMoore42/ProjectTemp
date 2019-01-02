@@ -4,7 +4,7 @@ date: November 22, 2018
 
 Enemy classes:
 
-Scary Snail, Gaseous Ghoul, Hairy Hagraven, Phenomenal Phantom, Terrible Troll, Dangerous Dragon
+Scary Snail, Gaseous Ghoul, Hairy Hagraven, Phenomenal Phantom, Terrible Troll
 
 """
 
@@ -23,12 +23,16 @@ class Enemy():
         self.weapon = weapon
         self.status = status
 
+
     def __str__(self):
         return textwrap.dedent(f'''\n
                                 Name: {self.name}
                                 Attack: {round(self.attack, 2)}
                                 Defense: {round(self.defense, 2)}\n
                                 ''')
+
+    def boss_encounter(self):
+        pass
 
 
     def update_defense(self, player_attack):
@@ -46,11 +50,12 @@ class Enemy():
         self.status = False
 
 
-    def buff_stat(self, category):
-        if category == 'attack':
-            self.attack = round(self.attack * 1.5)
-        if category == 'defense':
-            self.defense = round(self.defense * 1.5)
+    def buff_stat(self, category, amount=1.5):
+        for cat in category:
+            if category == 'attack':
+                self.attack = round(self.attack * amount)
+            if category == 'defense':
+                self.defense = round(self.defense * amount)
 
 
     def action_select(self):
@@ -105,91 +110,51 @@ class Enemy():
             self.attack = random.randint(get_lower_range(self.attack, 0.05), get_upper_range(self.attack, 0.65))
             self.defense = random.randint(get_lower_range(self.defense, 0.05), get_upper_range(self.defense, 0.65))
 
+
 # enemy classes
-class Snail(Enemy):
+class Grunt(Enemy):
 
-    def __init__(self, level, attack, defense, name='Scary Snail', weapon="Slime Squall", status=True):
+    def __init__(self, level, attack, defense, name='_', weapon='_', enemy_type='Grunt', status=True):
         self.level = level
-        self.name = name
         self.attack = attack
         self.defense = defense
-        self.weapon = weapon
+        self.enemy_type = enemy_type
         self.status = status
-        super().roll_stats(category=1)
-        # super().__init__(player_level=player_level, name=name, weapon=weapon, attack=attack*player_level, defense=defense*player_level)
+
+        # monster type and weapon
+        self.name = random.choice(['Scary Snail', 'Gaseous Ghoul', 'Hairy Hagraven',
+                                   'Phenomenal Phantom', 'Terrible Troll', 'Rambunctious Redcap'])
+
+        # assign stats
+        if self.name == 'Scary Snail':
+            super().roll_stats(category=1)
+            self.weapon = 'Slime Squall'
+        if self.name == 'Gaseous Ghoul':
+            super().roll_stats(category=2)
+            self.weapon = 'Stink Attack'
+        if self.name == 'Hairy Hagraven':
+            super().roll_stats(category=3)
+            self.weapon = 'Hairball Hurl'
+        if self.name == 'Phenonmenal Phantom':
+            super().roll_stats(category=4)
+            self.weapon = 'Spooky Scream'
+        if self.name == 'Terrible Troll':
+            super().roll_stats(category=5)
+            self.weapon = 'Heavy Club'
+        if self.name == 'Rambunctious Redcap':
+            # randomized stats
+            stats = random.choice([1,5])
+            super().roll_stats(category=stats)
+            self.weapon = 'Dirty Pikestaff'
 
     def __str__(self):
         return super().__str__()
 
 
-class Ghoul(Enemy):
+# Boss class
+class Boss(Enemy):
 
-    def __init__(self, level, attack, defense, name='Gaseous Ghoul', weapon="Stink Attack", status=True):
-        self.level = level
-        self.name = name
-        self.attack = attack
-        self.defense = defense
-        self.weapon = weapon
-        self.status = status
-        super().roll_stats(category=2)
-    #     super().__init__(player_level=player_level, name=name, weapon=weapon, attack=attack*player_level, defense=defense*player_level)
-    #
-    def __str__(self):
-        return super().__str__()
-
-
-class Hagraven(Enemy):
-
-    def __init__(self, level, attack, defense, name='Hairy Hagraven', weapon="Hairball Hurl", status=True):
-        self.level = level
-        self.name = name
-        self.attack = attack
-        self.defense = defense
-        self.weapon = weapon
-        self.status = status
-        super().roll_stats(category=3)
-    #     super().__init__(player_level=player_level, name=name, weapon=weapon, attack=attack*player_level, defense=defense*player_level)
-    #
-    def __str__(self):
-        return super().__str__()
-
-
-class Phantom(Enemy):
-
-    def __init__(self, level, attack, defense, name='Phenomenal Phantom', weapon="Perilous Punch", status=True):
-        self.level = level
-        self.name = name
-        self.attack = attack
-        self.defense = defense
-        self.weapon = weapon
-        self.status = status
-        super().roll_stats(category=4)
-        # super().__init__(player_level=player_level, name=name, weapon=weapon, attack=attack*player_level, defense=defense*player_level)
-
-    def __str__(self):
-        return super().__str__()
-
-
-class Troll(Enemy):
-
-    def __init__(self, level, attack, defense, name='Terrible Troll', weapon="Heavy Club", status=True):
-        self.level = level
-        self.name = name
-        self.attack = attack
-        self.defense = defense
-        self.weapon = weapon
-        self.status = status
-        super().roll_stats(category=5)
-        # super().__init__(player_level=player_level, name=name, weapon=weapon, attack=attack*player_level, defense=defense*player_level)
-
-    def __str__(self):
-        return super().__str__()
-
-
-# bosses
-class Dragon(Enemy):
-
-    def __init__(self, level, attack, defense, enemy_type='Boss', name='Dangerous Dragon', weapon="Fearsome Firebreath", status=True):
+    def __init__(self, level, attack, defense, name='_', weapon='_', enemy_type='Boss', status=True):
         self.level = level
         self.name = name
         self.attack = attack
@@ -198,33 +163,34 @@ class Dragon(Enemy):
         self.weapon = weapon
         self.status = status
 
-        boss_random = random.randint(1, 5)
-        action = super().action_select()
+        random_stats = random.randint(1, 5)
 
-        super().roll_stats(category=boss_random)
-        super().buff_stat(action)
-        # super().__init__(player_level=player_level, name=name, weapon=weapon, attack=attack*player_level, defense=defense*player_level)
+        super().roll_stats(category=random_stats) # 6 creates random stats
+
+        # monster type and weapon
+        self.name = random.choice(['Dangerous Dragon', 'Maniacal Manticore', 'Quick Qilin',
+                                   'Greedy Grootslang', 'Knavish Kamaitachi', 'Bewitching Banshee'])
+
+        if self.name == 'Dangerous Dragon':
+            # Dragon's flames == stronger attack
+            super().buff_stat('attack', 1.5)
+        if self.name == 'Maniacal Manticore':
+            # Manticore's venom lower's players defense
+            super().buff_stat('attack', 1.25)
+        if self.name == 'Quick Qilin':
+            # Qilin attacks first on first appearance, but has weaker attack
+            super().buff_stat('attack', 0.25)
+        if self.name == 'Greedy Grootslang':
+            # The power of the grootslang is clear in its defense
+            super().buff_stat('defense', 1.35)
+        if self.name == 'Knavish Kamaitachi':
+            # The Kamaitachi attacks twice with its quick, but weak, dual blades
+            super().buff_stat('attack', 0.52)
+        if self.name == 'Bewitching Banshee':
+            # The banshee bewitches the attacker into pulling their hits and lowering their defenses.
+            super().buff_stat('attack', 1.15)
+            super().buff_stat('defense', 1.05)
 
     def __str__(self):
         return super().__str__()
 
-class Manticore(Enemy):
-
-    def __init__(self, level, attack, defense, enemy_type='Boss', name='Maniacal Manticore', weapon="Savage Sting", status=True):
-        self.level = level
-        self.name = name
-        self.attack = attack
-        self.defense = defense
-        self.enemy_type = enemy_type
-        self.weapon = weapon
-        self.status = status
-
-        boss_random = random.randint(1, 5)
-        action = super().action_select()
-
-        super().roll_stats(category=boss_random)
-        super().buff_stat(action)
-        # super().__init__(player_level=player_level, name=name, weapon=weapon, attack=attack*player_level, defense=defense*player_level)
-
-    def __str__(self):
-        return super().__str__()

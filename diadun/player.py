@@ -34,7 +34,7 @@ class Player():
                                 ''')
 
 
-    def update_level(self, max_defense, critical=False):
+    def update_level(self, max_defense, critical=False, enemy_type='Grunt'):
         """
         If monster defeated, level up. If critical strike, level up 5 levels.
         :return:
@@ -45,6 +45,11 @@ class Player():
             self.level += 5
             self.attack = round(self.attack * 1.35, 2)
             self.defense = round(self.defense * 1.35, 2)
+
+            if enemy_type == 'Boss':
+                action = random.choice(['attack', 'defense'])
+                self.buff_stat(action)
+                print(f'\nYou took down a boss! +6 Levels and {action} buffed!')
             print(f'\nNice Moves! You moved 5 levels up to level {self.level}!')
         else:
             if self.defense < max_defense:
@@ -63,6 +68,7 @@ class Player():
             self.defense = 0
             self.status = False
             print('Oh no! You were defeated.\n')
+
 
     def recover(self):
         rec = self.defense + (self.defense * 0.25)
