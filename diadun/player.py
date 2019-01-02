@@ -4,7 +4,13 @@ date: November 22, 2018
 
 Player classes:
 
-Warrior, Princess, Wizard, Falco Lombardi
+Warrior, Princess, Wizard, Poor Squire
+
+
+To add:
+- Counter system for lives ==> how many chocolate chips can you get with 3 lives?
+--> Regular mode: 3 Lives, redeem 25% of CC for one more life
+--> Gauntlet: 1 Lives, go until you're defeated
 """
 
 import os, cmd, sys
@@ -14,14 +20,15 @@ import textwrap
 # player meta class
 class Player():
 
-    def __init__(self, name, weapon, level=1, status='Strong', attack=5, defense=5, tokens=0, loss=False):
+    def __init__(self, name, weapon, level=1, status='Strong', attack=5, defense=5, tokens=0, chances=3):
         self.name = name
+        self.weapon = weapon
         self.level = level
+        self.status = status
         self.attack = attack
         self.defense = defense
         self.tokens = tokens
-        self.weapon = weapon
-        self.status = status
+        self.chances = chances
 
 
     def __str__(self):
@@ -38,7 +45,7 @@ class Player():
 
     def update_level(self, max_defense, critical=False, enemy_type='Grunt'):
         """
-        If monster defeated, level up. If critical strike, level up 5 levels.
+        If monster defeated, level up. If critical strike, level up 5 levels. If Poor Squire, you level slower.
         :return:
         """
 
@@ -54,12 +61,18 @@ class Player():
                 print(f'\nYou took down a boss! +6 Levels, {action} buffed, 3 Chocolate Chips earned!')
             print(f'\nNice Moves! You moved 5 levels up to level {self.level}!')
         else:
+            if self.name == 'Poor Squire':
+                self.attack = round(self.attack * 1.05, 2)
+                self.defense = round(self.defense * 1.05, 2)
+            else:
+                self.attack = round(self.attack * 1.15, 2)
+                self.defense = round(self.defense * 1.15, 2)
+
             if self.defense < max_defense:
                 self.defense = max_defense*0.75
+
             self.level += 1
             self.tokens += 1
-            self.attack = round(self.attack * 1.15, 2)
-            self.defense = round(self.defense * 1.15, 2)
 
             praise = random.choice(['Nice', 'Awesome', 'Radical',
                                     'No Way', 'Close One', 'Wow',
@@ -86,20 +99,28 @@ class Player():
         if self.defense <= 0:
             self.defense = 0
             self.status = False
-            print('\nOh no! You were defeated.')
-            print(f'Playthrough Stats:\n'
-                  f'Level: {self.level}\n'
-                  f'Chocolate Chips Earned: {self.tokens}\n'
-                  f'Character: {self.name}\n'
-                  'Restarting adventure!')
-
-            self.tokens = 0
+            self.chances -= 1
+            print('\nOh no! You were defeated.\n')
+            if self.chances == 0:
+                print(f'Game over!\n')
+                print(f'Playthrough:\n'
+                      f'Level: {self.level}\n'
+                      f'Chocolate Chips: {self.tokens}\n'
+                      f'Character: {self.name}\n')
+                self.tokens = 0
 
 
     def recover(self):
-        rec = self.defense + (self.defense * 0.25)
-        self.defense = round(rec)
-        print(f'{self.name} recovered {round(self.defense * 0.25)}')
+        '''
+        If less than 2 defense, +2 health added, else regular stat boost
+        :return:
+        '''
+        if self.defense <= 2:
+            stats_recovered = 2
+        else:
+            stats_recovered = round(self.defense * 0.25)
+        self.defense = self.defense + round(stats_recovered)
+        print(f'{self.name} recovered {stats_recovered}')
 
     def buff_stat(self, category):
         if category == 'attack':
@@ -124,7 +145,9 @@ class Player():
         if category == 3:
             self.attack = random.randint(4, 16)
             self.defense = random.randint(4, 16)
-
+        if category == 4:
+            self.attack = random.randint(4, 4)
+            self.defense = random.randint(4, 4)
 
 
 
@@ -157,10 +180,11 @@ class Wizard(Player):
     def __str__(self):
         return super().__str__()
 
-class Falco(Player):
+class Squire(Player):
 
-    def __init__(self, name='Falco Lombardi', weapon="Pillar Combos", attack=1000, defense=1000):
-        super().__init__(name=name, weapon=weapon, attack=attack, defense=defense)
+    def __init__(self, name='Poor Squire', weapon="Filthy Hands"):
+        super().__init__(name=name, weapon=weapon)
+        super().roll_stats(category=4)
 
     def __str__(self):
         return super().__str__()

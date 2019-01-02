@@ -23,12 +23,12 @@ from enemy import *
 # environment variables
 menu_options = ['b', 'back', 'q', 'quit',
                 'p', 'play', 'h', 'help',
-                'n', 'newgame']
+                'n', 'newgame', 'c', 'continue']
 
 characters = {'1': Warrior(),
               '2': Princess(),
               '3': Wizard(),
-              '4': Falco()
+              '4': Squire()
               }
 
 environments = {'Regular': ['Perilous Path', 'Haunted Woods', 'Creepy Cave', 'Mighty Mountain'],
@@ -44,20 +44,21 @@ status_buffs = {'Buffed': 1.5,
 max_defense = []
 
 # functions block
-def choose_character():
+def choose_character(chances=1):
 
-    print('\n', '='*25, '\n')
-    print('Player beware, for the path is dangerous...')
-    print('1. The Warrior\'s sword is a strong and sturdy weapon...')
-    print('2. The Princess\'s magical armour protects her from most attacks...')
-    print('3. The Wizard is powerful but at what cost?...\n')
+    print('\n', '='*25, '\n'
+          'Player beware, for the path is dangerous...\n'
+          '1. The Warrior\'s sword is a strong and sturdy weapon...\n'
+          '2. The Princess\'s magical armour protects her from most attacks...\n'
+          '3. The Wizard\'s powerful magic can sometimes be unpredictable...\n'
+          '4. What\'s that smell?...\n')
 
     action = input('>> Who will you choose? ')
 
+    if action.lower() == 'b':
+        title_screen()
     if action in characters.keys():
-
         player = characters[action]
-        print(f"You selected: {player.name}")
 
     return player
 
@@ -69,7 +70,7 @@ def start_game(player, environments):
     if player.level % 5 == 0:
         location = random.choice(environments['Boss'])
 
-    print(f"Welcome {player.name}!\n\n"
+    print(f"\nWelcome {player.name}!\n\n"
           f"Weapon: {player.weapon}. Player Level: {player.level}.\n"
           f"Location: {location}\n")
 
@@ -79,10 +80,6 @@ def start_game(player, environments):
 def run_encounter(player, location):
     # set enemy variables
     enemy = None
-
-    def boss_encounter(boss):
-        pass
-
 
     def action_select():
         return random.choice(['attack', 'defense'])
@@ -125,7 +122,11 @@ def run_encounter(player, location):
                 player.update_defense(enemy_attack=attack)
 
             if not player.status:
-                menu_nav('n')
+                if player.chances == 0:
+                    menu_nav('n')
+                else:
+
+
 
             player_turn(None)
 
@@ -352,8 +353,15 @@ def help_menu():
     print("Press 'b' to navigate back to title")
 
     menu = textwrap.dedent(f'''\n
-                            Play: Press 'p' or 'play' to start game
-                            Quit: 'q' or 'quit' to exit game\n
+                            Regular Mode: You have 3 chances to collect as many\n
+                            chocolate chips as you can.\n
+                            Gauntlet Mode: No second chances here!!\n
+                            Player Stats:\n
+                            Attack: The strength your character has to deal damage\n
+                            Defense: Your characters ability to block incoming attacks.\n
+                            Chance to regain health if both parties defend!\n
+                            \n
+                            Critical Hits: A perfect roll of 5.5 has many perks!\n
                             ''')
     print(menu)
     print('=' * 25, '\n')
@@ -361,20 +369,38 @@ def help_menu():
 
 
 def menu_nav(option):
+    '''
+
+    :param option:
+    :return:
+    '''
+    # Starts
     if option.lower() in ['p', 'play']:
         # launch game
         player = choose_character()
+        start_game(player, environments) # starts game
+    # Regular mode // 3 lives
+    elif option.lower() in ['c', 'continue']: # for regular mode
+        # will go until chances = 0
+        enemy = None
+        max_defense = []
+        player = choose_character()
         start_game(player, environments)
+    # Gauntlet mode // 1 Lives
     elif option.lower() in ['n', 'new']:
         # new game, new player
         player = None
         enemy = None
         max_defense = []
         player = choose_character()
+        player.chances = 1
         start_game(player, environments)
     elif option.lower() in ['h', 'help']:
         # launch help
         help_menu()
+    elif option.lower() in ['b', 'back']:
+        # back to title screen
+        title_screen()
     elif option.lower() in ['q', 'quit']:
         # I'm not sure what this does
         sys.exit()
@@ -384,9 +410,11 @@ def title_screen():
     # set player variables
     max_defense = []
 
-    print("Welcome to DiaDungeon!\n\n"
-          "Play: Press 'p' to start game\n"
+    print("Welcome to FivePointFive!\n\n"
+          "Regular Mode: Press 'p' to start game\n"
+          "Gauntlet Mode: Press 'g' to test your skills\n"
           "New Game: Press 'n' for new game\n"
+          "Help Menu: Press 'h' for help\n"
           "Quit: Press 'q' to exit game\n")
 
     option = input('>> ')
