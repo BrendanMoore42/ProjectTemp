@@ -21,9 +21,8 @@ from player import *
 from enemy import *
 
 # environment variables
-menu_options = ['b', 'back', 'q', 'quit',
-                'p', 'play', 'h', 'help',
-                'n', 'newgame', 'c', 'continue']
+menu_options = ['b', 'back', 'q', 'quit', 'p', 'play', 'h', 'help',
+                'g', 'gauntlet', 'n', 'newgame', 'c', 'continue']
 
 characters = {'1': Warrior(),
               '2': Princess(),
@@ -113,6 +112,10 @@ def run_encounter(player, location):
                 player.update_defense(enemy_attack=enemy_power)
             if action == 'player_attack':
                 attack = round(player_power-enemy_power)
+                print (f'attack:{attack}')
+                if attack <= 0:
+                    print(f'{enemy.name} successfully blocked {player.weapon}!\n')
+                    pass
                 enemy.update_defense(player_attack=attack)
             if action == 'both_defend':
                 player.recover()
@@ -123,8 +126,10 @@ def run_encounter(player, location):
 
             if not player.status:
                 if player.chances == 0:
+                    player.game_over()
                     menu_nav('n')
                 else:
+                    menu_nav('p')
 
 
 
@@ -350,18 +355,17 @@ def run_encounter(player, location):
 def help_menu():
     print('\n', '='*25)
     print('******* Help Menu *******\n')
-    print("Press 'b' to navigate back to title")
 
     menu = textwrap.dedent(f'''\n
-                            Regular Mode: You have 3 chances to collect as many\n
-                            chocolate chips as you can.\n
-                            Gauntlet Mode: No second chances here!!\n
-                            Player Stats:\n
-                            Attack: The strength your character has to deal damage\n
+                            Modes
+                            Regular Mode: You have 3 chances to collect as many chocolate chips as you can.
+                            Gauntlet Mode: No second chances! Not for the faint of heart.\n
+                            Player Stats
+                            Attack: The strength your character has to deal damage.
                             Defense: Your characters ability to block incoming attacks.\n
-                            Chance to regain health if both parties defend!\n
-                            \n
-                            Critical Hits: A perfect roll of 5.5 has many perks!\n
+                            Tips and Tricks
+                            If both parties choose defense, health goes up.
+                            Critical Hits: A perfect roll of 5.5 has many perks\n
                             ''')
     print(menu)
     print('=' * 25, '\n')
@@ -370,24 +374,25 @@ def help_menu():
 
 def menu_nav(option):
     '''
-
-    :param option:
-    :return:
+    Selects action from menu
     '''
-    # Starts
+
+    # Starts game
     if option.lower() in ['p', 'play']:
         # launch game
         player = choose_character()
-        start_game(player, environments) # starts game
+        start_game(player, environments)
+
     # Regular mode // 3 lives
-    elif option.lower() in ['c', 'continue']: # for regular mode
+    elif option.lower() in ['c', 'continue']:
         # will go until chances = 0
         enemy = None
         max_defense = []
         player = choose_character()
         start_game(player, environments)
+
     # Gauntlet mode // 1 Lives
-    elif option.lower() in ['n', 'new']:
+    elif option.lower() in ['g', 'n']:
         # new game, new player
         player = None
         enemy = None
@@ -395,12 +400,15 @@ def menu_nav(option):
         player = choose_character()
         player.chances = 1
         start_game(player, environments)
+
+    # Launch Help
     elif option.lower() in ['h', 'help']:
-        # launch help
         help_menu()
+    # Back to title
     elif option.lower() in ['b', 'back']:
         # back to title screen
         title_screen()
+    # Exit game
     elif option.lower() in ['q', 'quit']:
         # I'm not sure what this does
         sys.exit()

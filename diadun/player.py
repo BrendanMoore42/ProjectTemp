@@ -80,9 +80,9 @@ class Player():
 
             if self.tokens % 6 == 0:
                 self.status = 'Buffed'
-                print(f'\n{praise}! You are now level {self.level}! Chocolate Chips: {self.tokens} Condition: {self.status}')
+                print(f'\n{praise}! You are now level {self.level}! \nChocolate Chips: +{self.tokens} \nCondition: {self.status}')
 
-            print(f'\n{praise}! You are now level {self.level}! Chocolate Chips: {self.tokens} Condition: {self.status}')
+            print(f'\n{praise}! You are now level {self.level}! \nChocolate Chips: +{self.tokens} \nCondition: {self.status}')
 
     def log_stats(self):
         '''
@@ -101,13 +101,15 @@ class Player():
             self.status = False
             self.chances -= 1
             print('\nOh no! You were defeated.\n')
-            if self.chances == 0:
-                print(f'Game over!\n')
-                print(f'Playthrough:\n'
-                      f'Level: {self.level}\n'
-                      f'Chocolate Chips: {self.tokens}\n'
-                      f'Character: {self.name}\n')
-                self.tokens = 0
+
+
+    def game_over(self):
+        print(f'Game over!\n')
+        print(f'Playthrough:\n'
+              f'Level: {self.level}\n'
+              f'Chocolate Chips: {self.tokens}\n'
+              f'Character: {self.name}\n')
+        self.tokens = 0
 
 
     def recover(self):
@@ -154,7 +156,7 @@ class Player():
 # character classes
 class Warrior(Player):
 
-    def __init__(self, name='Warrior', weapon="Sword"):
+    def __init__(self, name='Warrior', weapon="Calamitous Claymore"):
         super().__init__(name=name, weapon=weapon)
         super().roll_stats(category=1)
 
@@ -164,7 +166,7 @@ class Warrior(Player):
 
 class Princess(Player):
 
-    def __init__(self, name='Princess', weapon="Bow"):
+    def __init__(self, name='Princess', weapon="Luxurious Longbow"):
         super().__init__(name=name, weapon=weapon)
         super().roll_stats(category=2)
 
@@ -173,7 +175,7 @@ class Princess(Player):
 
 class Wizard(Player):
 
-    def __init__(self, name='Wizard', weapon="Magic"):
+    def __init__(self, name='Wizard', weapon="Mysterious Magic"):
         super().__init__(name=name, weapon=weapon)
         super().roll_stats(category=3)
 

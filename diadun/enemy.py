@@ -95,7 +95,7 @@ class Enemy():
 
 
         if category == 1:
-            self.attack = random.randint(get_lower_range(self.attack, 0.75), get_upper_range(self.attack))
+            self.attack = random.randint(get_lower_range(self.attack, 0.45), get_upper_range(self.attack))
             self.defense = random.randint(get_lower_range(self.defense, 0.15), get_upper_range(self.defense, 0.25))
         if category == 2:
             self.attack = random.randint(get_lower_range(self.attack, 0.15), get_upper_range(self.attack, 0.15))
