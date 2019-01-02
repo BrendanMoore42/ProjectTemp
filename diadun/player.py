@@ -14,11 +14,12 @@ import textwrap
 # player meta class
 class Player():
 
-    def __init__(self, name, weapon, level=1, status='Strong', attack=5, defense=5, loss=False):
+    def __init__(self, name, weapon, level=1, status='Strong', attack=5, defense=5, tokens=0, loss=False):
         self.name = name
         self.level = level
         self.attack = attack
         self.defense = defense
+        self.tokens = tokens
         self.weapon = weapon
         self.status = status
 
@@ -30,6 +31,7 @@ class Player():
                                 Defense: {round(self.defense, 2)}
                                 Weapon: {self.weapon}
                                 Status: {self.status}
+                                Chips: {self.tokens}
                                 Level: {self.level}\n
                                 ''')
 
@@ -49,15 +51,32 @@ class Player():
             if enemy_type == 'Boss':
                 action = random.choice(['attack', 'defense'])
                 self.buff_stat(action)
-                print(f'\nYou took down a boss! +6 Levels and {action} buffed!')
+                print(f'\nYou took down a boss! +6 Levels, {action} buffed, 3 Chocolate Chips earned!')
             print(f'\nNice Moves! You moved 5 levels up to level {self.level}!')
         else:
             if self.defense < max_defense:
                 self.defense = max_defense*0.75
             self.level += 1
+            self.tokens += 1
             self.attack = round(self.attack * 1.15, 2)
             self.defense = round(self.defense * 1.15, 2)
-            print(f'\nLevel Up! You are now level {self.level}')
+
+            praise = random.choice(['Nice', 'Awesome', 'Radical',
+                                    'No Way', 'Close One', 'Wow',
+                                    'Amazing', 'Woohoo', 'Aw Yeah'])
+
+            if self.tokens % 6 == 0:
+                self.status = 'Buffed'
+                print(f'\n{praise}! You are now level {self.level}! Chocolate Chips: {self.tokens} Condition: {self.status}')
+
+            print(f'\n{praise}! You are now level {self.level}! Chocolate Chips: {self.tokens} Condition: {self.status}')
+
+    def log_stats(self):
+        '''
+        Record highscores
+        '''
+        pass
+        #with open('player_log.', 'r') as f:
 
 
     def update_defense(self, enemy_attack):
@@ -67,7 +86,14 @@ class Player():
         if self.defense <= 0:
             self.defense = 0
             self.status = False
-            print('Oh no! You were defeated.\n')
+            print('\nOh no! You were defeated.')
+            print(f'Playthrough Stats:\n'
+                  f'Level: {self.level}\n'
+                  f'Chocolate Chips Earned: {self.tokens}\n'
+                  f'Character: {self.name}\n'
+                  'Restarting adventure!')
+
+            self.tokens = 0
 
 
     def recover(self):

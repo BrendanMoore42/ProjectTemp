@@ -125,7 +125,6 @@ def run_encounter(player, location):
                 player.update_defense(enemy_attack=attack)
 
             if not player.status:
-                print(f'You made it to level {player.level} with the {player.name}. Restarting adventure!')
                 menu_nav('n')
 
             player_turn(None)
@@ -190,7 +189,6 @@ def run_encounter(player, location):
 
         # store defense value
         max_defense.append(player.defense)
-        print(max_defense)
 
         # check if boss just defeated
 
@@ -255,7 +253,7 @@ def run_encounter(player, location):
                 print('\nPerfect defense!!')
                 enemy_status(critical_block=True)
             if 5.1 <= roll <= 6.0:
-                power = round((player.defense / 2 * (roll * 1.75) * buff), 2)
+                power = round((player.defense / 2 * (roll * 1.15) * buff), 2)
                 print(f'\nVery Strong defense: {power}!')
             if 6.1 <= roll <= 7.0:
                 power = round((player.defense / 6 * roll * buff), 2)
@@ -335,7 +333,7 @@ def run_encounter(player, location):
     if player.level % 5 == 0:
         enemy = Boss(level=player.level, attack=player.attack, defense=player.defense)
         location = random.choice(environments['Boss'])
-        print(f"\nBoss Battle! You enter the {location} and are attacked by the {enemy.name}!")
+        print(f"\nBoss Battle! At the {location} the {enemy.name} awaits!")
 
     # display menu and initiate turn
     init_action = input(f"\n1. Attack\n"
