@@ -20,7 +20,7 @@ import textwrap
 # player meta class
 class Player():
 
-    def __init__(self, name, weapon, level=1, status='Strong', attack=5, defense=5, tokens=0, grunt_count=0, boss_count=0, chances=3, rolls=None):
+    def __init__(self, name, weapon, level=1, status='Strong', attack=5, defense=5, tokens=0, grunt_count=0, boss_count=0, chances=3, rolls=[]):
         self.name = name
         self.weapon = weapon
         self.level = level
@@ -32,21 +32,7 @@ class Player():
         self.boss_count = boss_count
         self.chances = chances
         self.rolls = rolls
-        self.avg_roll = avg(rolls)
 
-    def __del__(self):
-        print(f'Game over!\n')
-        print(f'Playthrough:\n'
-              f'Level: {self.level}\n'
-              f'Chocolate Chips: {self.tokens}\n'
-              f'Grunts Beaten: {player.grunt_count}\n'
-              f'Bosses Defeated: {player.boss_count}\n'
-              f'Character: {self.name}\n'
-              f'\nRoll Stats:\n'
-              f'Avg. Roll: {self.avg_roll}\n'
-              f'\nRoll Stats:\n'
-              f'\nRoll Stats:\n'
-              f'\nRoll Stats:\n')
 
     def __str__(self):
         return textwrap.dedent(f'''\n
@@ -56,6 +42,7 @@ class Player():
                                 Weapon: {self.weapon}
                                 Status: {self.status}
                                 Chips: {self.tokens}
+                                Chances: {self.chances}
                                 Level: {self.level}\n
                                 ''')
 
@@ -107,6 +94,21 @@ class Player():
         '''
         pass
         #with open('player_log.', 'r') as f:
+
+
+    def game_over(self):
+        print(f'Game over!\n')
+        print(f'Playthrough:\n'
+              f'Level: {self.level}\n'
+              f'Chocolate Chips: {self.tokens}\n'
+              f'Grunts Beaten: {self.grunt_count}\n'
+              f'Bosses Defeated: {self.boss_count}\n'
+              f'Character: {self.name}\n'
+              f'\nRoll Stats:\n'
+              f'Avg. Roll: \n'
+              f'\nRoll Stats:\n'
+              f'\nRoll Stats:\n'
+              f'\nRoll Stats:\n')
 
 
     def update_defense(self, enemy_attack):

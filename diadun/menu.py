@@ -50,7 +50,7 @@ def choose_character(chances=1):
           '1. The Warrior\'s sword is a strong and sturdy weapon...\n'
           '2. The Princess\'s magical armour protects her from most attacks...\n'
           '3. The Wizard\'s powerful magic can sometimes be unpredictable...\n'
-          '4. What\'s that smell?...\n')
+          '4. What\'s that awful smell?...\n')
 
     action = input('>> Who will you choose? ')
 
@@ -124,12 +124,13 @@ def run_encounter(player, location):
                 attack = round(enemy_power-player_power)
                 player.update_defense(enemy_attack=attack)
 
-            if not player.status:
+            if player.status == False:
                 if player.chances == 0:
                     # player_save_stats()
-                    del player
+                    # del player
                     title_screen()
                 else:
+                    player.status = 'Strong'
                     menu_nav('p')
 
             player_turn(None)
@@ -351,9 +352,10 @@ def run_encounter(player, location):
     print(enemy.enemy_type)
     player_turn(init_action)
 
+
 def help_menu():
     print('\n', '='*25)
-    print('******* Help Menu *******\n')
+    print('******* Help Menu *******')
 
     menu = textwrap.dedent(f'''\n
                             Modes
@@ -363,8 +365,8 @@ def help_menu():
                             Attack: The strength your character has to deal damage.
                             Defense: Your characters ability to block incoming attacks.\n
                             Tips and Tricks
-                            If both parties choose defense, health goes up.
-                            Critical Hits: A perfect roll of 5.5 has many perks\n
+                            If both parties choose defense, health can be recovered.
+                            Critical Hits: A perfect roll of 5.5 has many perks...\n
                             ''')
     print(menu)
     print('=' * 25, '\n')
@@ -384,6 +386,7 @@ def menu_nav(option):
 
     # Regular mode // 3 lives
     elif option.lower() in ['c', 'continue']:
+        print('Starting Regular Mode: 3 Lives.')
         # will go until chances = 0
         enemy = None
         max_defense = []
@@ -392,9 +395,10 @@ def menu_nav(option):
 
     # Gauntlet mode // 1 Lives
     elif option.lower() in ['g', 'n']:
+        print('Starting Gauntlet: Good Luck...')
         # new game, new player
-        player = None
         enemy = None
+        player = None
         max_defense = []
         player = choose_character()
         player.chances = 1

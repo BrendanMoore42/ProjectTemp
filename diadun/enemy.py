@@ -173,10 +173,10 @@ class Boss(Enemy):
 
         if self.name == 'Dangerous Dragon':
             # Dragon's flames == stronger attack
-            super().buff_stat('attack', 1.5)
+            super().buff_stat('attack', 1.15)
         if self.name == 'Maniacal Manticore':
             # Manticore's venom lower's players defense
-            super().buff_stat('attack', 1.25)
+            super().buff_stat('attack', 1.1)
         if self.name == 'Quick Qilin':
             # Qilin attacks first on first appearance, but has weaker attack
             super().buff_stat('attack', 0.25)
@@ -188,7 +188,7 @@ class Boss(Enemy):
             super().buff_stat('attack', 0.52)
         if self.name == 'Bewitching Banshee':
             # The banshee bewitches the attacker into pulling their hits and lowering their defenses.
-            super().buff_stat('attack', 1.15)
+            super().buff_stat('attack', 1.05)
             super().buff_stat('defense', 1.05)
 
     def __str__(self):
