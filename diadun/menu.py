@@ -80,6 +80,7 @@ def run_encounter(player, location):
     # set enemy variables
     enemy = None
 
+
     def action_select():
         return random.choice(['attack', 'defense'])
 
@@ -112,7 +113,6 @@ def run_encounter(player, location):
                 player.update_defense(enemy_attack=enemy_power)
             if action == 'player_attack':
                 attack = round(player_power-enemy_power)
-                print (f'attack:{attack}')
                 if attack <= 0:
                     print(f'{enemy.name} successfully blocked {player.weapon}!\n')
                     pass
@@ -126,12 +126,11 @@ def run_encounter(player, location):
 
             if not player.status:
                 if player.chances == 0:
-                    player.game_over()
-                    menu_nav('n')
+                    # player_save_stats()
+                    del player
+                    title_screen()
                 else:
                     menu_nav('p')
-
-
 
             player_turn(None)
 

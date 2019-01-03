@@ -50,7 +50,7 @@ class Enemy():
         self.status = False
 
 
-    def buff_stat(self, category, amount=1.5):
+    def buff_stat(self, category, amount=1.05):
         for cat in category:
             if category == 'attack':
                 self.attack = round(self.attack * amount)

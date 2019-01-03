@@ -20,7 +20,7 @@ import textwrap
 # player meta class
 class Player():
 
-    def __init__(self, name, weapon, level=1, status='Strong', attack=5, defense=5, tokens=0, chances=3):
+    def __init__(self, name, weapon, level=1, status='Strong', attack=5, defense=5, tokens=0, grunt_count=0, boss_count=0, chances=3, rolls=None):
         self.name = name
         self.weapon = weapon
         self.level = level
@@ -28,8 +28,25 @@ class Player():
         self.attack = attack
         self.defense = defense
         self.tokens = tokens
+        self.grunt_count = grunt_count
+        self.boss_count = boss_count
         self.chances = chances
+        self.rolls = rolls
+        self.avg_roll = avg(rolls)
 
+    def __del__(self):
+        print(f'Game over!\n')
+        print(f'Playthrough:\n'
+              f'Level: {self.level}\n'
+              f'Chocolate Chips: {self.tokens}\n'
+              f'Grunts Beaten: {player.grunt_count}\n'
+              f'Bosses Defeated: {player.boss_count}\n'
+              f'Character: {self.name}\n'
+              f'\nRoll Stats:\n'
+              f'Avg. Roll: {self.avg_roll}\n'
+              f'\nRoll Stats:\n'
+              f'\nRoll Stats:\n'
+              f'\nRoll Stats:\n')
 
     def __str__(self):
         return textwrap.dedent(f'''\n
@@ -101,15 +118,6 @@ class Player():
             self.status = False
             self.chances -= 1
             print('\nOh no! You were defeated.\n')
-
-
-    def game_over(self):
-        print(f'Game over!\n')
-        print(f'Playthrough:\n'
-              f'Level: {self.level}\n'
-              f'Chocolate Chips: {self.tokens}\n'
-              f'Character: {self.name}\n')
-        self.tokens = 0
 
 
     def recover(self):
