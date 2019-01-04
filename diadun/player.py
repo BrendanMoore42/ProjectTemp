@@ -104,11 +104,11 @@ class Player():
               f'Grunts Beaten: {self.grunt_count}\n'
               f'Bosses Defeated: {self.boss_count}\n'
               f'Character: {self.name}\n'
-              f'\nRoll Stats:\n'
+              f'Roll Stats:\n'
               f'Avg. Roll: \n'
-              f'\nRoll Stats:\n'
-              f'\nRoll Stats:\n'
-              f'\nRoll Stats:\n')
+              f'Roll Stats:\n'
+              f'Roll Stats:\n'
+              f'Roll Stats:\n')
 
 
     def update_defense(self, enemy_attack):
@@ -120,6 +120,10 @@ class Player():
             self.status = False
             self.chances -= 1
             print('\nOh no! You were defeated.\n')
+
+            if self.chances == 0:
+                game_over()
+
 
 
     def recover(self):
