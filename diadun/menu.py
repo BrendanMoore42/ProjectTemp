@@ -7,6 +7,9 @@ FivePointFive
 
 RPG crawler that uses blood sugar numbers as attack/defensive rolls
 
+Requirements:
+Python 3.6+
+
 Player classes
 Warrior, Princess, Wizard
 
@@ -39,14 +42,11 @@ status_buffs = {'Buffed': 1.5,
                 'Injured': 0.25,
                 False: 1}
 
-# set player variables
-max_defense = []
-
 # functions block
 def choose_character(chances=1):
 
-    print('\n', '='*25, '\n'
-          'Player beware, for the path is dangerous...\n'
+    print('='*25)
+    print('\nPlayer beware, for the path is dangerous...\n'
           '1. The Warrior\'s sword is a strong and sturdy weapon...\n'
           '2. The Princess\'s magical armour protects her from most attacks...\n'
           '3. The Wizard\'s powerful magic can sometimes be unpredictable...\n'
@@ -108,7 +108,7 @@ def run_encounter(player, location):
             if action == 'both_attack':
                 enemy.update_defense(player_attack=player_power)
                 if not enemy.status:
-                    player.update_level(max(max_defense))
+                    player.update_level()
                     run_encounter(player, location)
                 player.update_defense(enemy_attack=enemy_power)
             if action == 'player_attack':
@@ -126,12 +126,12 @@ def run_encounter(player, location):
 
             if player.status == False:
                 if player.chances == 0:
-                    # player_save_stats()
-                    # del player
+                    player.roll_stats(category=player.name)
                     title_screen()
                 else:
+
                     player.status = 'Strong'
-                    menu_nav('p')
+                    menu_nav('c', chips=player.tokens, chances=player.chances)
 
             player_turn(None)
 
@@ -179,7 +179,7 @@ def run_encounter(player, location):
         if critical_attack:
             print(f'Critical attack!! {enemy.name} defeated!\n')
             enemy.critical_defeat()
-            player.update_level(critical=True, max_defense=max(max_defense))
+            player.update_level(critical=True)
             run_encounter(player, location)
 
         if attack_power != None:
@@ -192,9 +192,6 @@ def run_encounter(player, location):
     def player_turn(action):
 
         buff = status_buffs[player.status]
-
-        # store defense value
-        max_defense.append(player.defense)
 
         # check if boss just defeated
 
@@ -234,7 +231,7 @@ def run_encounter(player, location):
                 enemy_status(attack_power=power, enemy_buff=True)
             if roll >= 12.1:
                 print(f'\nAttack Missed!')
-                enemy_status(enemy_buff=True)
+                enemy_status(attack_power=0, enemy_buff=True)
 
             enemy_status(attack_power=power)
 
@@ -272,8 +269,8 @@ def run_encounter(player, location):
                 enemy_status(defense_power=power, enemy_buff=True)
                 print(f'\nExtremely Weak defense: {power}!')
             if roll >= 12.1:
-                print('\n!')
-                enemy_status(enemy_buff=True)
+                print('\nDefense failed!')
+                enemy_status(defense_power=0, enemy_buff=True)
 
             enemy_status(defense_power=power)
 
@@ -290,10 +287,12 @@ def run_encounter(player, location):
         # attack
         if action == '1':
             roll = float(roll_attack())
+            player.update_rolls(roll=roll, level=player.level)
             attack_power(roll, buff)
         # defend
         if action == '2':
             roll = float(roll_attack())
+            player.update_rolls(roll=roll, level=player.level)
             defense_power(roll, buff)
         # check player stats
         if action == '3':
@@ -326,7 +325,7 @@ def run_encounter(player, location):
 
         if not enemy.status:
             # enemy is defeated, update level and run next encounter
-            player.update_level(max_defense=max(max_defense), enemy_type=enemy.enemy_type)
+            player.update_level(enemy_type=enemy.enemy_type)
             run_encounter(player, location)
 
     # standard enemy
@@ -354,7 +353,7 @@ def run_encounter(player, location):
 
 
 def help_menu():
-    print('\n', '='*25)
+    print('='*25)
     print('******* Help Menu *******')
 
     menu = textwrap.dedent(f'''\n
@@ -373,29 +372,43 @@ def help_menu():
     title_screen()
 
 
-def menu_nav(option):
+def menu_nav(option, chips=None, chances=None):
     '''
     Selects action from menu
     '''
 
-    # Starts game
-    if option.lower() in ['p', 'play']:
+    # Starts Regular game
+    if option.lower() in ['n', 'p', 'play']:
         # launch game
+        print('\nNew game! Regular Mode: 3 Chances. Good Luck!')
         player = choose_character()
+        player.roll_stats(category=player.name)
         start_game(player, environments)
 
-    # Regular mode // 3 lives
+    # # Regular mode // 3 lives
+    # elif option.lower() in ['c', 'continue']:
+    #     # will go until chances = 0
+    #     enemy = None
+    #     max_defense = []
+    #     player = choose_character()
+    #     player.roll_stats(category=player.name)
+    #     start_game(player, environments)
+
+    # Continue
     elif option.lower() in ['c', 'continue']:
-        print('Starting Regular Mode: 3 Lives.')
-        # will go until chances = 0
+        # reset enemy and defense
         enemy = None
-        max_defense = []
+
+        # select new character and roll over some stats until out of continues
         player = choose_character()
+        player.on_continue(tokens=chips, chances=chances)
+        player.roll_stats(category=player.name)
+        print(f'rerolling stats...attack: {player.attack}, defense: {player.defense}')
         start_game(player, environments)
 
     # Gauntlet mode // 1 Lives
-    elif option.lower() in ['g', 'n']:
-        print('Starting Gauntlet: Good Luck...')
+    elif option.lower() in ['g']:
+        print('\nStarting Gauntlet: 1 Chance. Good Luck...')
         # new game, new player
         enemy = None
         player = None
@@ -418,8 +431,6 @@ def menu_nav(option):
 
 
 def title_screen():
-    # set player variables
-    max_defense = []
 
     print("Welcome to FivePointFive!\n\n"
           "Regular Mode: Press 'p' to start game\n"

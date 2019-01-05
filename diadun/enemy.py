@@ -36,9 +36,15 @@ class Enemy():
 
 
     def update_defense(self, player_attack):
+        # current defense for comparison/have a max setting
+        max_defense = self.defense * 1.25
+
+        # set new defense
         self.defense = self.defense - player_attack
         self.defense = round(self.defense)
 
+        if self.defense > max_defense:
+            self.defense = max_defense
         if self.defense <= 0:
             print(f'\n{self.name} defeated!')
             self.status = False
@@ -92,7 +98,6 @@ class Enemy():
         def get_upper_range(whole, percent=0):
             upper = (percent * whole) + whole
             return int(upper)
-
 
         if category == 1:
             self.attack = random.randint(get_lower_range(self.attack, 0.45), get_upper_range(self.attack))
@@ -163,9 +168,7 @@ class Boss(Enemy):
         self.weapon = weapon
         self.status = status
 
-        random_stats = random.randint(1, 5)
-
-        super().roll_stats(category=random_stats) # 6 creates random stats
+        super().roll_stats(category=random.choice([3, 5])) # 6 creates random stats
 
         # monster type and weapon
         self.name = random.choice(['Dangerous Dragon', 'Maniacal Manticore', 'Quick Qilin',
@@ -173,23 +176,23 @@ class Boss(Enemy):
 
         if self.name == 'Dangerous Dragon':
             # Dragon's flames == stronger attack
-            super().buff_stat('attack', 1.15)
+            super().buff_stat('attack', 1.08)
         if self.name == 'Maniacal Manticore':
             # Manticore's venom lower's players defense
-            super().buff_stat('attack', 1.1)
+            super().buff_stat('attack', 1.06)
         if self.name == 'Quick Qilin':
             # Qilin attacks first on first appearance, but has weaker attack
-            super().buff_stat('attack', 0.25)
+            pass
         if self.name == 'Greedy Grootslang':
             # The power of the grootslang is clear in its defense
-            super().buff_stat('defense', 1.35)
+            super().buff_stat('defense', 1.12)
         if self.name == 'Knavish Kamaitachi':
             # The Kamaitachi attacks twice with its quick, but weak, dual blades
-            super().buff_stat('attack', 0.52)
+            super().buff_stat('defense', 1.04)
         if self.name == 'Bewitching Banshee':
             # The banshee bewitches the attacker into pulling their hits and lowering their defenses.
-            super().buff_stat('attack', 1.05)
-            super().buff_stat('defense', 1.05)
+            super().buff_stat('attack', 1.03)
+            super().buff_stat('defense', 1.03)
 
     def __str__(self):
         return super().__str__()
