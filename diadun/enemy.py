@@ -177,22 +177,28 @@ class Boss(Enemy):
         if self.name == 'Dangerous Dragon':
             # Dragon's flames == stronger attack
             super().buff_stat('attack', 1.08)
+            self.weapon = 'Giant Flameball'
         if self.name == 'Maniacal Manticore':
             # Manticore's venom lower's players defense
             super().buff_stat('attack', 1.06)
+            self.weapon = 'Venomous Stinger'
         if self.name == 'Quick Qilin':
             # Qilin attacks first on first appearance, but has weaker attack
+            self.weapon = 'Hoof Kick'
             pass
         if self.name == 'Greedy Grootslang':
             # The power of the grootslang is clear in its defense
             super().buff_stat('defense', 1.12)
+            self.weapon = 'Tree Slam'
         if self.name == 'Knavish Kamaitachi':
             # The Kamaitachi attacks twice with its quick, but weak, dual blades
             super().buff_stat('defense', 1.04)
+            self.weapon = 'Dual Blades'
         if self.name == 'Bewitching Banshee':
             # The banshee bewitches the attacker into pulling their hits and lowering their defenses.
             super().buff_stat('attack', 1.03)
             super().buff_stat('defense', 1.03)
+            self.weapon = 'Pysch Out'
 
     def __str__(self):
         return super().__str__()

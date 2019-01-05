@@ -36,10 +36,10 @@ characters = {'1': Warrior(),
 environments = {'Regular': ['Perilous Path', 'Haunted Woods', 'Creepy Cave', 'Mighty Mountain'],
                 "Boss": ["Dragon's Den", "Denny's Diner", "Crumbling Castle"]}
 
-status_buffs = {'Buffed': 1.5,
+status_buffs = {'Buffed': 1.10,
                 'Strong': 1,
-                'Weakened': 0.75,
-                'Injured': 0.25,
+                'Weakened': 0.90,
+                'Injured': 0.75,
                 False: 1}
 
 # functions block
@@ -129,9 +129,9 @@ def run_encounter(player, location):
                     player.roll_stats(category=player.name)
                     title_screen()
                 else:
-
                     player.status = 'Strong'
-                    menu_nav('c', chips=player.tokens, chances=player.chances)
+                    print(f'Chances Left: {player.chances}')
+                    menu_nav('c', chips=player.tokens, chances=player.chances, new_game=False)
 
             player_turn(None)
 
@@ -196,15 +196,15 @@ def run_encounter(player, location):
         # check if boss just defeated
 
         def attack_power(roll, buff):
-            if 0 < roll <= 2.0:
+            if 0 < roll <= 1.9:
                 print('\n', '='*25)
                 print('\nBlood Sugar Critically Low SEEK IMMEDIATE CARE\n')
                 print('Exiting game.')
                 sys.exit()
-            if 2.1 <= roll <= 3.0:
+            if 2.0 <= roll <= 3.0:
                 power = round((player.attack / 12 + roll * buff), 2)
                 enemy_status(attack_power=power, enemy_buff=True)
-                print(f'\nVery Weak attack: {power}!')
+                print(f'\nVery weak attack: {power}!')
             if 3.1 <= roll <= 4.0:
                 power = round((player.attack / 8 + (roll * 1.25) * buff), 2)
                 print(f'\nWeak attack: {power}!')
@@ -213,23 +213,23 @@ def run_encounter(player, location):
                 print(f'\nStrong attack: {power}!')
             if roll == 5.5:
                 enemy_status(critical_attack=True)
-            if 5.1 <= roll <= 5.4:
+            if 5.1 <= roll <= 6.1:
                 power = round((player.attack / 6 * roll * buff), 2)
                 print(f'\nVery Strong attack: {power}!')
-            if 5.6 <= roll <= 6.0:
+            if 6.1 <= roll <= 8.0:
                 power = round((player.attack / 8 * roll * buff), 2)
-                print(f'\nVery Strong attack: {power}!')
-            if 6.1 <= roll <= 7.0:
-                power = round((player.attack / 8 * (roll / 2 * 1.15) * buff), 2)
                 print(f'\nStrong attack: {power}!')
-            if 7.1 <= roll <= 9.0:
-                power = round((player.attack / 8 + (roll / 4 * 1.25) * buff), 2)
+            if 8.1 <= roll <= 11.0:
+                power = round((player.attack / 8 * (roll / 2 * 1.15) * buff), 2)
                 print(f'\nWeak attack: {power}!')
-            if 9.1 <= roll <= 12.0:
+            if 11.1 <= roll <= 14.0:
+                power = round((player.attack / 8 + (roll / 4 * 1.25) * buff), 2)
+                print(f'\nExtremely weak attack: {power}!')
+            if 14.1 <= roll <= 17.0:
                 power = round((player.attack / 12 + (roll / 6) * buff), 2)
-                print(f'\nExtremely Weak attack: {power}!')
+                print(f'\nPitifully weak attack: {power}!')
                 enemy_status(attack_power=power, enemy_buff=True)
-            if roll >= 12.1:
+            if roll >= 17.1:
                 print(f'\nAttack Missed!')
                 enemy_status(attack_power=0, enemy_buff=True)
 
@@ -372,31 +372,24 @@ def help_menu():
     title_screen()
 
 
-def menu_nav(option, chips=None, chances=None):
+def menu_nav(option, chips=None, chances=None, new_game=True):
     '''
     Selects action from menu
     '''
 
-    # Starts Regular game
-    if option.lower() in ['n', 'p', 'play']:
-        # launch game
-        print('\nNew game! Regular Mode: 3 Chances. Good Luck!')
-        player = choose_character()
-        player.roll_stats(category=player.name)
-        start_game(player, environments)
-
-    # # Regular mode // 3 lives
-    # elif option.lower() in ['c', 'continue']:
-    #     # will go until chances = 0
-    #     enemy = None
-    #     max_defense = []
-    #     player = choose_character()
-    #     player.roll_stats(category=player.name)
-    #     start_game(player, environments)
+    # New Game
+    if new_game:
+        # Starts Regular game
+        if option.lower() in ['n', 'p', 'play']:
+            # launch game
+            print('\nNew game! Regular Mode: 3 Chances. Good Luck!')
+            player = choose_character()
+            player.roll_stats(category=player.name)
+            start_game(player, environments)
 
     # Continue
     elif option.lower() in ['c', 'continue']:
-        # reset enemy and defense
+        # reset enemy
         enemy = None
 
         # select new character and roll over some stats until out of continues
@@ -435,7 +428,6 @@ def title_screen():
     print("Welcome to FivePointFive!\n\n"
           "Regular Mode: Press 'p' to start game\n"
           "Gauntlet Mode: Press 'g' to test your skills\n"
-          "New Game: Press 'n' for new game\n"
           "Help Menu: Press 'h' for help\n"
           "Quit: Press 'q' to exit game\n")
 

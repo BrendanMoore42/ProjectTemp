@@ -56,13 +56,15 @@ class Player():
         """
         # add to counter
         self.grunt_count += 1
+        weighted_lucky = [3] * 35 + [4] * 40 + [5] * 20 + [8] * 4 + [15] * 1
+        lucky_number = random.choice(weighted_lucky)
 
         if critical:
             self.defense = max(self.max_defense)
             self.level += 5
             self.attack = round(self.attack * 1.35, 2)
             self.defense = round(self.defense * 1.35, 2)
-            self.tokens += 3
+            self.tokens += lucky_number
 
             if enemy_type == 'Boss':
                 action = random.choice(['attack', 'defense'])
@@ -71,12 +73,26 @@ class Player():
                 self.boss_count += 1
                 self.buff_stat(action)
                 self.level += 1
-                self.tokens += 2
-                print(f'\nBoss defeated! Level {self.level}, {action} buffed, +5 Chocolate Chips!')
+                self.tokens += lucky_number
+                print(f'\nBoss critical defeat!! Level {self.level}, {action} buffed, +{lucky_number} Chocolate Chips!')
                 pass
+
             self.status = 'Buffed'
             print(f'\nNice Moves! You moved 5 levels up to level {self.level}! Status buffed!')
         else:
+
+            if enemy_type == 'Boss':
+                action = random.choice(['attack', 'defense'])
+                # fix grunt count, add boss count
+                self.grunt_count -= 1
+                self.boss_count += 1
+                self.buff_stat(action)
+                self.level += 1
+                print(f'lucky: {lucky_number}')
+                self.tokens += lucky_number
+                print(f'\nBoss defeated! Level {self.level}, {action} buffed, +{lucky_number} Chocolate Chips!')
+                pass
+
             if self.name == 'Poor Squire':
                 self.attack = round(self.attack * 1.05, 2)
                 self.defense = round(self.defense * 1.05, 2)
@@ -98,12 +114,26 @@ class Player():
                 self.status = 'Buffed'
                 print(f'\n{praise}! Level {self.level}! \nChocolate Chips: +1 \nCondition: {self.status}')
 
-            print(f'\n{praise}! You are now level {self.level}! \nChocolate Chips: +{self.tokens} \nCondition: {self.status}')
+            print(f'\n{praise}! You are now level {self.level}! \nChocolate Chips: +1 \nCondition: {self.status}')
 
 
     def update_rolls(self, roll, level):
+        """
+        Logs rolls and levels, changes status based on roll
+        :param roll:
+        :param level:
+        :return:
+        """
         self.rolls.append(roll)
         self.levels.append(level)
+
+        # Modify status each roll
+        if 4 <= roll <= 6:
+            self.status = 'Strong'
+        if (2 <= roll <= 3) or (9.1 <= roll <= 12):
+            self.status = 'Weakened'
+        if roll > 12:
+            self.status = 'Injured'
         # print(f'Added {roll}. Player rolls: {self.rolls}')
 
 
@@ -132,7 +162,7 @@ class Player():
               f'Bosses Defeated: {self.boss_count}\n'
               f'Character: {self.name}\n'
               f'\nRoll Stats\n'
-              f'Avg. Roll: {round(sum(self.rolls)/len(self.rolls), 1)}\n'
+              f'Average Roll: {round(sum(self.rolls)/len(self.rolls), 1)}\n'
               f'Lowest Roll: {min(self.rolls)}\n'
               f'Highest Roll: {max(self.rolls)}\n')
 
