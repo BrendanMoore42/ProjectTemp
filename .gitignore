@@ -5,3 +5,4 @@
 /happybdaypy/*.txt
 /happybdaypy/friends.json
 /happybdaypy/credentials.py
+*setup.py
