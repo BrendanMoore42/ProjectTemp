@@ -1,0 +1,6 @@
+W
+Daily=1, Weekly=6, Wkd=False
+C
+Daily=0, Weekly=3.5
+B
+Daily=0, Weekly=5.5
