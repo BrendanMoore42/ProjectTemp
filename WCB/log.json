@@ -1,0 +1,5 @@
+{
+ "W": {Level=1, Weekly=6, Wkd=False},
+ "C": {Level=0, Weekly=3.5, Wkd=False},
+ "B": {Level=0, Weekly=5.5, Wkd=True}
+}
