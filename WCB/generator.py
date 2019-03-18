@@ -14,16 +14,18 @@ import random
 
 
 class Habit(object):
-    def __init__(self, daily=0, weekly=0, monthly=0, frequency=0.0, weekend=False):
-        self.daily = daily
-        self.weekly = weekly
-        self.monthly = monthly
+    def __init__(self, habit, frequency=0.0, weekend=False):
+        self.habit = habit
+        self.daily = 0.0
+        self.weekly = 0.0
+        self.monthly = 0.0
         self.weekend = weekend
         self.frequency = frequency
 
         self.calc_frequency()
 
         print(self.frequency)
+        print(self.habit)
 
 
     def calc_frequency(self):
@@ -34,14 +36,13 @@ class Habit(object):
         if self.weekend:
             max_value = 2
 
-        weekly_odds = [1] * self.weekly
+        weekly_odds = [1] * int(self.weekly)
         while len(weekly_odds) != 7:
             weekly_odds.append(0)
         print(weekly_odds)
         frequency = random.choice([0,1])
         return frequency
 
-g = Habit(weekly=4)
 
 
 
@@ -56,7 +57,10 @@ def main():
 
         print(freqs)
 
+    freqs = list(zip(freqs[::2], freqs[1::2]))
 
+    for habit in freqs:
+        habit = Habit(habit)
 
 
 if __name__ == "__main__":
