@@ -18,37 +18,37 @@ import datetime
 class Habit(object):
     def __init__(self, habit, frequency=0.0):
         self.habit = habit
-        self.nickname = self.habit[0]
-        self.level = self.habit[1]
-        self.weekly = self.habit[2]
-        self.weekend = self.habit[3]
+        habits = self.habit.split(',')
+        self.nickname = habits[0].split('=')[1]
+        self.level = habits[1].split('=')[1]
+        self.weekly = habits[2].split('=')[1]
+        self.weekend = habits[3].split('=')[1]
         self.frequency = frequency
 
 
-        # self.calc_frequency()
+        self.calc_frequency()
 
         # print(self.frequency)
-        print(self.habit)
-        print(f'Nickname: {self.nickname}, Level: {self.level}, Weekly: {self.weekly}')
+        print(f'Nickname: {self.nickname}, '
+              f'Level: {self.level}, '
+              f'Weekly: {self.weekly}, '
+              f'Weekend: {self.weekend}')
 
 
-    # def calc_frequency(self):
-    #
-    #
-    #     if self.frequency:
-    #         return self.frequency
-    #     if self.weekend:
-    #         max_value = 2
-    #
-    #     weekly_odds = [1] * int(self.weekly)
-    #     while len(weekly_odds) != 7:
-    #         weekly_odds.append(0)
-    #     print(weekly_odds)
-    #     frequency = random.choice([0,1])
-    #     return frequency
+    def calc_frequency(self):
 
+        if self.frequency:
+            return self.frequency
+        if self.weekend:
+            max_value = 2
 
+        weekly_odds = [self.level] * int(self.weekly)
 
+        while len(weekly_odds) != 7:
+            weekly_odds.append(0)
+        print(weekly_odds)
+        frequency = random.choice(weekly_odds)
+        return frequency
 
 
 def main():
@@ -56,12 +56,9 @@ def main():
     with open('freq_log.txt', 'r') as f:
         freqs = f.readlines()
 
-        print(freqs)
-
     # freqs = list(zip(freqs[::2], freqs[1::2]))
 
     for habit in freqs:
-        print(habit)
         habit = Habit(habit)
 
 
